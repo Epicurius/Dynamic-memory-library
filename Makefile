@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/12 14:44:46 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/12 16:27:50 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ RESET			:= "\e[0m"
 
 NAME = libmem.a
 
-INCLUDES = -I ./libmem.h -I ./libs/libft -I ./libs/libpf
+INCLUDES = -I ./libmem.h -I ./lib/libft -I ./lib/libpf
 
 SRCS =	main.c\
 		ft_malloc.c\
@@ -31,11 +31,17 @@ SRCS =	main.c\
 OBJS = $(SRCS:.c=.o)
 FLAGS = -Wall -Wextra -Werror
 
-all: $(NAME)
+LIBS = ./lib/libft/libft.a ./lib/libpf/libpf.a
+
+all: $(LIBS) $(NAME)
 	@printf $(CYAN)"[INFO]	$(NAME) is up to date!\n"$(RESET)
 
+$(LIBS):
+	@make -C ./lib/libft
+	@make -C ./lib/libpf
+
 $(NAME): $(SRCS)
-	@gcc -o $(NAME) $(SRCS) $(INCLUDES) -pthread ./libs/libft/libft.a ./libs/libpf/libpf.a
+	@gcc -o $(NAME) $(SRCS) $(LIBS) $(INCLUDES) -pthread
 	@echo "$(NAME) was successfully created."
 
 clean:
