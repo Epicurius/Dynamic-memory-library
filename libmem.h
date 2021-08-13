@@ -24,6 +24,15 @@
 
 #define TRUE	1
 #define FALSE	0
+
+enum				e_zone
+{
+	TINY = 0,
+	SMALL = 1,
+	LARGE = 2,
+	ALL = 3,
+};
+
 /*
  *	printf("%lu %lu %d\n", sizeof(t_zone), sizeof(t_block), getpagesize());
  *		= 16 32 4096
@@ -40,23 +49,26 @@
 # define SMALL_MAX			1024
 # define SMALL_ZONE_SIZE	4096 * 26
 
-enum				e_zone
-{
-	TINY = 0,
-	SMALL = 1,
-	LARGE = 2
-};
-
-//sizeof == 32
+/*
+ *	Size: 32 Bytes
+ *	Addres to the next block to the right.
+ *	Is free or reserved.
+ *	The amount of user data.
+ *	User data + infastructure data size
+ */
 typedef struct		s_block
 {
 	struct s_block	*next;
-	size_t			memsize;
-	size_t			checksum;
 	int				free;
+	size_t			memsize;
+	size_t			checksum; //Maybe remove and let visualizer calculate.
 }					t_block;
 
-//	sizeof == 16
+/*
+ *	Size: 16 Bytes
+ *	Next same type zeon address.
+ *	Address to the end of current zone.
+ */
 typedef struct		s_zone
 {
 	struct s_zone	*next;
@@ -74,8 +86,12 @@ typedef struct s_alloc
 extern t_alloc		g_alloc;
 
 void	show_alloc_mem(void);
+void	*alloc_amount(int type, size_t total, size_t memsize);
+void	update_next_block(t_zone *zone, t_block *block);
 void	*create_new_zone(t_zone **head, size_t size);
 void	*ft_malloc(size_t memsize);
+void	*ft_calloc(size_t num, size_t size);
+void	*ft_realloc1(void *ptr, size_t size);
 int		ft_free(void *ptr);
 
 #endif

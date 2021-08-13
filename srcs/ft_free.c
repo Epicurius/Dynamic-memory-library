@@ -6,15 +6,15 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 10:52:52 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/12 14:29:44 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/13 13:32:30 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libmem.h"
 
 /*
- *	Combine blocks if curr and/or prev are free.
-*/
+ *	Combine blocks if an adjacent block is free.
+ */
 static void	merge(t_block *prev, t_block *curr)
 {
 	if (curr->next && curr->next->free == TRUE)
@@ -31,6 +31,10 @@ static void	merge(t_block *prev, t_block *curr)
 	}
 }
 
+/*
+ *	Reliase zone if not reserved blocks found.
+ *	And relink if more than 1 zone.
+ */
 static void	release_zone(t_zone **head, t_zone *zone, t_zone *prev)
 {
 	t_block		*block;
@@ -52,6 +56,11 @@ static void	release_zone(t_zone **head, t_zone *zone, t_zone *prev)
 	munmap(zone, size);
 }
 
+/*
+ *	Loop through all the blocks until you find the ptr.
+ *	Set to free.
+ *	Send to merge() to merger block adjacent to ptr.
+ */
 static int	free_block_chain(t_block *block, void *ptr, size_t *size)
 {
 	t_block	*prev;
@@ -72,53 +81,60 @@ static int	free_block_chain(t_block *block, void *ptr, size_t *size)
 	return (0);
 }
 
+/*
+ *	Loop through all the zones and chek if ptr is inside.
+ *	If is send to free_block_chain().
+ *	Check if there are any blocks left in zone.
+ *	Else free zone.
+ */
 static int	check_zone(t_zone **head, void *ptr, size_t *size)
 {
-	t_zone	*curr;
+	t_zone	*zone;
 	t_zone	*prev;
 	t_block	*block;
 
-	curr = *head;
+	zone = *head;
 	prev = NULL;
-	while (curr)
+	while (zone)
 	{
-		if ((void *)curr < ptr && ptr < curr->end)
+		if ((void *)zone < ptr && ptr < zone->end)
 		{
-			block = (void *)curr + sizeof(t_zone);
+			block = (void *)zone + sizeof(t_zone);
 			if (free_block_chain(block, ptr, size))
 			{
-				release_zone(head, curr, prev);
+				release_zone(head, zone, prev);
 				return (1);
 			}
 		}
-		prev = curr;
-		curr = curr->next;
+		prev = zone;
+		zone = zone->next;
 	}
 	return (0);
 }
 
 /*
- *	Dont know where the memory is so checking from
+ *	Dont know where the memory is, so checking starting from:
  *	TINY -> SMALL -> LARGE -> ERROR
  */
 int	ft_free(void *ptr)
 {
-	int		found;
-	size_t	size;
+	int		zone;
+	size_t	size;//useless
 
-	found = 0;
+	size = 0;
+	zone = 0;
 	pthread_mutex_lock(&g_alloc.mutex);
 	if (ptr)
 	{
 		if (check_zone(&g_alloc.zone[TINY], ptr, &size))
-			found = 1;
+			zone = 1;
 		else if (check_zone(&g_alloc.zone[SMALL], ptr, &size))
-			found = 2;
+			zone = 2;
 		else if (check_zone(&g_alloc.zone[LARGE], ptr, &size))
-			found = 3;
+			zone = 3;
 		else
-			found = -1;
+			zone = -1;
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
-	return (found);
+	return (zone);
 }

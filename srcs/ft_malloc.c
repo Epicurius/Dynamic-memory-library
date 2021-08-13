@@ -6,43 +6,15 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 11:54:07 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/12 13:52:28 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/13 13:19:22 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libmem.h"
 
 /*
- *	Updated next block:
- *	If block is the last block in this zone.
- *	If block is NOT the last block in this zone.
- */
-void	update_next_block(t_zone *zone, t_block *block)
-{
-	t_block	*new;
-
-	new = (void *)block + sizeof(t_block) + block->memsize;
-	if (!block->next && (void *)new + sizeof(t_block) < zone->end)
-	{
-		new->next = NULL;
-		new->memsize = zone->end - ((void *)new + sizeof(t_block));
-		new->checksum = (size_t)new + new->memsize;
-		new->free = TRUE;
-		block->next = new;
-	}
-	else if (block->next && (void *)new + sizeof(t_block) < (void *)block->next)
-	{
-		new->next = block->next;
-		new->memsize = (void *)block->next - ((void *)new + sizeof(t_block));
-		new->checksum = (size_t)new + new->memsize;
-		new->free = TRUE;
-		block->next = new;
-	}
-}
-
-/*
- *	Searches throught the all the blocks in the zone and returns one if
- *	the its free and memsize fits.
+ *	Searches through all the blocks in the zone and returns one if
+ *	its free and if the memory size is same or less.
  */
 static void	*find_space(t_zone *zone, size_t memsize)
 {
@@ -69,10 +41,10 @@ static void	*find_space(t_zone *zone, size_t memsize)
 }
 
 /*
- *	If find space finds a blick with the correct amount of space return it.
- *	Else create a new block and use it.
+ *	If find_space() finds a block with same or less amount of space return it.
+ *	else create a new block and return it.
  */
-static void	*malloc_amount(int type, size_t total, size_t memsize)
+void	*alloc_amount(int type, size_t total, size_t memsize)
 {
 	void	*mem;
 	t_zone	*zone;
@@ -87,19 +59,23 @@ static void	*malloc_amount(int type, size_t total, size_t memsize)
 	return (mem);
 }
 
-void	*ft_malloc(size_t memsize)
+/*
+ *	Mutes pthread to be safe.
+ *	Check size type and send to alloc_amount() with corrent size.
+ */
+void	*ft_malloc(size_t size)
 {
 	void	*mem;
 	
 	pthread_mutex_lock(&g_alloc.mutex);
-	if (memsize <= 0)
+	if (size <= 0)
 		mem = NULL;
-	else if (memsize <= TINY_MAX)
-		mem = malloc_amount(TINY, TINY_ZONE_SIZE, memsize);
-	else if (memsize <= SMALL_MAX)
-		mem = malloc_amount(SMALL, SMALL_ZONE_SIZE, memsize);
+	else if (size <= TINY_MAX)
+		mem = alloc_amount(TINY, TINY_ZONE_SIZE, size);
+	else if (size <= SMALL_MAX)
+		mem = alloc_amount(SMALL, SMALL_ZONE_SIZE, size);
 	else
-		mem = malloc_amount(LARGE, BLOCK_SIZE + ZONE_SIZE + memsize, memsize);
+		mem = alloc_amount(LARGE, BLOCK_SIZE + ZONE_SIZE + size, size);
 	pthread_mutex_unlock(&g_alloc.mutex);
 	return (mem);
 }

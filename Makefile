@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/12 16:27:50 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/13 11:55:08 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,25 +20,27 @@ RESET			:= "\e[0m"
 
 NAME = libmem.a
 
-INCLUDES = -I ./libmem.h -I ./lib/libft -I ./lib/libpf
+INCLUDES = -I . -I ./lib/libft -I ../libs/libpf
 
-SRCS =	main.c\
-		ft_malloc.c\
-		ft_free.c\
-		show_alloc_mem.c\
-		zone_utils.c	
+SRCS =	./srcs/main.c\
+		./srcs/ft_malloc.c\
+		./srcs/ft_calloc.c\
+		./srcs/ft_realloc.c\
+		./srcs/ft_free.c\
+		./srcs/show_alloc_mem.c\
+		./srcs/zone_utils.c	
 
 OBJS = $(SRCS:.c=.o)
 FLAGS = -Wall -Wextra -Werror
 
-LIBS = ./lib/libft/libft.a ./lib/libpf/libpf.a
+LIBS = ./lib/libft/libft.a ../libs/libpf/libpf.a
 
 all: $(LIBS) $(NAME)
 	@printf $(CYAN)"[INFO]	$(NAME) is up to date!\n"$(RESET)
 
 $(LIBS):
 	@make -C ./lib/libft
-	@make -C ./lib/libpf
+	@make -C ../libs/libpf
 
 $(NAME): $(SRCS)
 	@gcc -o $(NAME) $(SRCS) $(LIBS) $(INCLUDES) -pthread
@@ -50,6 +52,7 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
+	@make re -C ../libs/libpf
 
 re: fclean all
 
