@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_malloc.c                                        :+:      :+:    :+:   */
+/*   malloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 
 #include "libmem.h"
+
+t_alloc	g_alloc =
+{
+	{NULL, NULL, NULL},
+	PTHREAD_MUTEX_INITIALIZER
+};
 
 /*
  *	Searches through all the blocks in the zone and returns one if
@@ -63,7 +69,7 @@ void	*alloc_amount(int type, size_t total, size_t memsize)
  *	Mutes pthread to be safe.
  *	Check size type and send to alloc_amount() with corrent size.
  */
-void	*ft_malloc(size_t size)
+void	*malloc(size_t size)
 {
 	void	*mem;
 	

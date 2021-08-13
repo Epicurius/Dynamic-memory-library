@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 14:37:33 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/13 14:42:16 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/13 15:13:29 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static void	print_blocks(t_block *block, int flags)
 	}
 }
 
-static void	print_zones(t_zone *zone, int zone_id, int flags)
+static void	print_zones(t_zone *zone, int flags)
 {
 	int	i;
 
@@ -106,11 +106,11 @@ void	show_alloc_mem(void)
 {
 	pthread_mutex_lock(&g_alloc.mutex);
 	ft_printf("{CLR:41}TINY{RESET} : %p\n", g_alloc.zone[TINY]);
-	print_zones(g_alloc.zone[TINY], TINY, 0);
+	print_zones(g_alloc.zone[TINY], 0);
 	ft_printf("{CLR:51}SMALL{RESET} : %p\n", g_alloc.zone[SMALL]);
-	print_zones(g_alloc.zone[SMALL], SMALL, 0);
+	print_zones(g_alloc.zone[SMALL], 0);
 	ft_printf("{CLR:61}LARGE{RESET} : %p\n", g_alloc.zone[LARGE]);
-	print_zones(g_alloc.zone[LARGE], LARGE, 0);
+	print_zones(g_alloc.zone[LARGE], 0);
 	pthread_mutex_unlock(&g_alloc.mutex);
 }
 
@@ -123,17 +123,17 @@ void	show_alloc_mem_ex(int flags)
 	if (flags & MEM_SHOW_TINY)
 	{
 		ft_printf("{CLR:41}TINY{RESET} : %p\n", g_alloc.zone[TINY]);
-		print_zones(g_alloc.zone[TINY], TINY, flags);
+		print_zones(g_alloc.zone[TINY], flags);
 	}
 	if (flags & MEM_SHOW_SMALL)
 	{
 		ft_printf("{CLR:51}SMALL{RESET} : %p\n", g_alloc.zone[SMALL]);
-		print_zones(g_alloc.zone[SMALL], SMALL, flags);
+		print_zones(g_alloc.zone[SMALL], flags);
 	}
 	if (flags & MEM_SHOW_LARGE)
 	{
 		ft_printf("{CLR:61}LARGE{RESET} : %p\n", g_alloc.zone[LARGE]);
-		print_zones(g_alloc.zone[LARGE], LARGE, flags);
+		print_zones(g_alloc.zone[LARGE], flags);
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free.c                                          :+:      :+:    :+:   */
+/*   free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -38,7 +38,6 @@ static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
 static void	release_zone(t_zone **head, t_zone *zone, t_zone *prev)
 {
 	t_block		*block;
-	char		*str;
 	size_t		size;
 
 	block = (void *)zone + sizeof(t_zone);
@@ -116,7 +115,7 @@ static int	check_zone(t_zone **head, void *ptr, size_t *size)
  *	Dont know where the memory is, so checking starting from:
  *	TINY -> SMALL -> LARGE -> ERROR
  */
-int	ft_free(void *ptr)
+void	free(void *ptr)
 {
 	int		zone;
 	size_t	size;//useless
@@ -136,5 +135,5 @@ int	ft_free(void *ptr)
 			zone = -1;
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
-	return (zone);
+	//return (zone);
 }

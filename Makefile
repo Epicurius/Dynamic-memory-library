@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/13 14:54:16 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/13 16:49:13 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,41 +22,53 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-NAME = libmem.a
+NAME =	libft_malloc_$(HOSTTYPE).so
 
-INCLUDES = -I . -I ./lib/libft -I ../libs/libpf
+LINK =	libft_malloc.so
 
-SRCS =	./srcs/main.c\
-		./srcs/ft_malloc.c\
-		./srcs/ft_calloc.c\
-		./srcs/ft_realloc.c\
-		./srcs/ft_free.c\
-		./srcs/show_alloc_mem.c\
-		./srcs/zone_utils.c	
+FLAGS =	-Wall -Werror -Wextra 
 
-OBJS = $(SRCS:.c=.o)
-FLAGS = -Wall -Wextra -Werror
+INCLUDES = -I ./include -I ./lib/libft -I ./lib/libpf
 
-LIBS = ./lib/libft/libft.a ../libs/libpf/libpf.a
+SRCS =	ft_malloc.c\
+		ft_calloc.c\
+		ft_realloc.c\
+		ft_free.c\
+		show_alloc_mem.c\
+		zone_utils.c
+		
+SRC_DIR = ./srcs/
+OBJ_DIR = ./objs/
+OBJS := $(SRCS:.c=.o)
+OBJS :=	$(addprefix $(OBJ_DIR),$(OBJS))
+
+LIBS = ./lib/libft/libft.a ./lib/libpf/libpf.a
 
 all: $(LIBS) $(NAME)
 	@printf $(CYAN)"[INFO]	$(NAME) is up to date!\n"$(RESET)
 
-$(LIBS):
-	@make -C ./lib/libft
-	@make -C ../libs/libpf
-
-$(NAME): $(SRCS)
-	@gcc -o $(NAME) $(SRCS) $(LIBS) $(INCLUDES) -pthread
+$(NAME): $(OBJS)
+	gcc $(OBJS) $(INCLUDES) $(LIBS) $(FLAGS) -fPIC -shared -o $(NAME)
+	@/bin/rm -f $(LINK)
+	@ln -s $(NAME) $(LINK)
 	@echo "$(NAME) was successfully created."
 
+$(OBJS): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	@/bin/mkdir -p $(OBJ_DIR)
+	$(CC) -c $(FLAGS) $(INCLUDES) $< -o $@
+
+$(LIBS):
+	@make -C ./lib/libft
+	@make -C ./lib/libpf
+
 clean:
-	@rm -f $(OBJS)
+	-/bin/rm -f $(OBJS)
+	/usr/bin/find . -name "obj" -maxdepth 1 -type d -empty -delete
 	@printf $(CYAN)"[INFO]	$(NAME) cleaned\n"$(RESET)
 
 fclean: clean
-	@rm -f $(NAME)
-	@make re -C ../libs/libpf
+	/bin/rm -f $(NAME) $(LINK)
+	/bin/rm -f ./*.so
 
 re: fclean all
 

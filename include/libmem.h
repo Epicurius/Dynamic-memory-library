@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_MALLOC_H
-# define FT_MALLOC_H
+#ifndef malloc_H
+# define malloc_H
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -89,10 +89,10 @@ typedef struct s_alloc
 
 extern t_alloc		g_alloc;
 
-void	*ft_malloc(size_t memsize);
-void	*ft_calloc(size_t num, size_t size);
-void	*ft_realloc1(void *ptr, size_t size);
-int		ft_free(void *ptr);
+void	*malloc(size_t memsize);
+void	*calloc(size_t num, size_t size);
+void	*realloc(void *ptr, size_t size);
+void	free(void *ptr);
 
 void	show_alloc_mem(void);
 void	show_alloc_mem_ex(int flags);

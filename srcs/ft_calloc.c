@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -16,7 +16,7 @@
  *	Same as malloc except it sets all bytes to 0.
  *	More info in malloc.
  */
-void	*ft_calloc(size_t num, size_t size)
+void	*calloc(size_t num, size_t size)
 {
 	void	*mem;
 	size_t	total;

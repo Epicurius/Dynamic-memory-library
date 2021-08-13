@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/13 11:30:55 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/13 13:26:02 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/13 15:01:29 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,19 @@ int	find_block_and_zone(void *ptr, t_block **block, t_zone **zone)
  *	else if: new size is less or same, free the overflow.
  *	else if: new size is more malloc copy memory and free old.
  */
-void	*ft_realloc1(void *ptr, size_t size)
+void	*realloc(void *ptr, size_t size)
 {
 	void	*new;
 	t_block	*block;
 	t_zone	*zone;
 
 	if (!ptr)
-		return (ft_malloc(size));
+		return (malloc(size));
 	new = NULL;
 	if (find_block_and_zone(ptr, &block, &zone))
 	{
 		if (size == 0)
-			ft_free(ptr);
+			free(ptr);
 		else if (size <= block->memsize)
 		{
 			block->memsize = size;
@@ -87,11 +87,11 @@ void	*ft_realloc1(void *ptr, size_t size)
 		}
 		else
 		{
-			new = ft_malloc(size);
+			new = malloc(size);
 			if (!new)
 				return (NULL);
 			ft_memcpy(new, ptr, block->memsize < size ? block->memsize : size);
-			ft_free(ptr);
+			free(ptr);
 		}
 	}
 	return (new);
