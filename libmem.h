@@ -25,6 +25,12 @@
 #define TRUE	1
 #define FALSE	0
 
+# define MEM_SHOW_TINY 	0x00000001
+# define MEM_SHOW_SMALL	0x00000010
+# define MEM_SHOW_LARGE 0x00000100
+# define MEM_HEXDUMP 	0x00001000
+# define MEM_SHOW_FREE	0x00010000
+
 enum				e_zone
 {
 	TINY = 0,
@@ -56,7 +62,7 @@ enum				e_zone
  *	The amount of user data.
  *	User data + infastructure data size
  */
-typedef struct		s_block
+typedef struct s_block
 {
 	struct s_block	*next;
 	int				free;
@@ -69,7 +75,7 @@ typedef struct		s_block
  *	Next same type zeon address.
  *	Address to the end of current zone.
  */
-typedef struct		s_zone
+typedef struct s_zone
 {
 	struct s_zone	*next;
 	void			*end;
@@ -79,19 +85,19 @@ typedef struct s_alloc
 {
 	t_zone			*zone[3];
 	pthread_mutex_t	mutex;
-	pthread_t		main_prog;
-	int				debug;
 }					t_alloc;
 
 extern t_alloc		g_alloc;
 
-void	show_alloc_mem(void);
-void	*alloc_amount(int type, size_t total, size_t memsize);
-void	update_next_block(t_zone *zone, t_block *block);
-void	*create_new_zone(t_zone **head, size_t size);
 void	*ft_malloc(size_t memsize);
 void	*ft_calloc(size_t num, size_t size);
 void	*ft_realloc1(void *ptr, size_t size);
 int		ft_free(void *ptr);
+
+void	show_alloc_mem(void);
+void	show_alloc_mem_ex(int flags);
+void	*alloc_amount(int type, size_t total, size_t memsize);
+void	update_next_block(t_zone *zone, t_block *block);
+void	*create_new_zone(t_zone **head, size_t size);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/13 11:55:08 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/13 14:54:16 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,10 @@ BLUE			:= "\e[0;34m"
 MAGENTA			:= "\e[0;35m"
 CYAN			:= "\e[0;36m"
 RESET			:= "\e[0m"
+
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
 
 NAME = libmem.a
 

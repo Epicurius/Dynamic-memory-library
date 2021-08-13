@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 10:52:52 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/13 13:32:30 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/13 13:35:29 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
  *	Combine blocks if an adjacent block is free.
  */
-static void	merge(t_block *prev, t_block *curr)
+static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
 {
 	if (curr->next && curr->next->free == TRUE)
 	{
@@ -59,7 +59,7 @@ static void	release_zone(t_zone **head, t_zone *zone, t_zone *prev)
 /*
  *	Loop through all the blocks until you find the ptr.
  *	Set to free.
- *	Send to merge() to merger block adjacent to ptr.
+ *	Send to merge_free_adjacent_blocks() to merger block adjacent to ptr.
  */
 static int	free_block_chain(t_block *block, void *ptr, size_t *size)
 {
@@ -72,7 +72,7 @@ static int	free_block_chain(t_block *block, void *ptr, size_t *size)
 		{
 			block->free = TRUE;
 			*size = block->memsize;
-			merge(prev, block);
+			merge_free_adjacent_blocks(prev, block);
 			return (1);
 		}
 		prev = block;
