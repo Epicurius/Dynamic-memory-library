@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/13 11:30:55 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/13 15:01:29 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/14 14:50:32 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	find_block_and_zone(void *ptr, t_block **block, t_zone **zone)
 		return (1);
 	if (find_at_zone(g_alloc.zone[SMALL], ptr, block, zone))
 		return (2);
-	if (find_at_zone(g_alloc.zone[LARGE], ptr, block, zone)) 
+	if (find_at_zone(g_alloc.zone[LARGE], ptr, block, zone))
 		return (3);
 	return (0);
 }
@@ -90,7 +90,7 @@ void	*realloc(void *ptr, size_t size)
 			new = malloc(size);
 			if (!new)
 				return (NULL);
-			ft_memcpy(new, ptr, block->memsize < size ? block->memsize : size);
+			ft_memcpy(new, ptr, ft_min(block->memsize, size));
 			free(ptr);
 		}
 	}

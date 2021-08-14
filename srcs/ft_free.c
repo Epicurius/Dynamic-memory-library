@@ -60,7 +60,7 @@ static void	release_zone(t_zone **head, t_zone *zone, t_zone *prev)
  *	Set to free.
  *	Send to merge_free_adjacent_blocks() to merger block adjacent to ptr.
  */
-static int	free_block_chain(t_block *block, void *ptr, size_t *size)
+static int	free_block_chain(t_block *block, void *ptr)
 {
 	t_block	*prev;
 
@@ -70,7 +70,6 @@ static int	free_block_chain(t_block *block, void *ptr, size_t *size)
 		if ((void *)block + sizeof(t_block) == ptr && !block->free)
 		{
 			block->free = TRUE;
-			*size = block->memsize;
 			merge_free_adjacent_blocks(prev, block);
 			return (1);
 		}
@@ -86,7 +85,7 @@ static int	free_block_chain(t_block *block, void *ptr, size_t *size)
  *	Check if there are any blocks left in zone.
  *	Else free zone.
  */
-static int	check_zone(t_zone **head, void *ptr, size_t *size)
+static int	check_zone(t_zone **head, void *ptr)
 {
 	t_zone	*zone;
 	t_zone	*prev;
@@ -99,7 +98,7 @@ static int	check_zone(t_zone **head, void *ptr, size_t *size)
 		if ((void *)zone < ptr && ptr < zone->end)
 		{
 			block = (void *)zone + sizeof(t_zone);
-			if (free_block_chain(block, ptr, size))
+			if (free_block_chain(block, ptr))
 			{
 				release_zone(head, zone, prev);
 				return (1);
@@ -117,23 +116,20 @@ static int	check_zone(t_zone **head, void *ptr, size_t *size)
  */
 void	free(void *ptr)
 {
-	int		zone;
-	size_t	size;//useless
+	int	zone;
 
-	size = 0;
 	zone = 0;
 	pthread_mutex_lock(&g_alloc.mutex);
 	if (ptr)
 	{
-		if (check_zone(&g_alloc.zone[TINY], ptr, &size))
+		if (check_zone(&g_alloc.zone[TINY], ptr))
 			zone = 1;
-		else if (check_zone(&g_alloc.zone[SMALL], ptr, &size))
+		else if (check_zone(&g_alloc.zone[SMALL], ptr))
 			zone = 2;
-		else if (check_zone(&g_alloc.zone[LARGE], ptr, &size))
+		else if (check_zone(&g_alloc.zone[LARGE], ptr))
 			zone = 3;
 		else
 			zone = -1;
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
-	//return (zone);
 }

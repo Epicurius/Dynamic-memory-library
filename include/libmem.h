@@ -21,7 +21,6 @@
 #include "stdio.h"
 #include "libpf.h"
 
-
 #define TRUE	1
 #define FALSE	0
 
@@ -51,9 +50,12 @@ enum				e_zone
 # define BLOCK_SIZE			sizeof(t_block)
 # define ZONE_SIZE			sizeof(t_zone)
 # define TINY_MAX			128
-# define TINY_ZONE_SIZE		4096 * 4
+# define TINY_ZONE_SIZE		16384//4096 * 4
 # define SMALL_MAX			1024
-# define SMALL_ZONE_SIZE	4096 * 26
+# define SMALL_ZONE_SIZE	106496//4096 * 26
+# define ROW_SIZE			15
+
+# define VISUAIZER_INFO		"TINY 128 16384     SMALL 1024 106496     LARGE I N F  I N F"
 
 /*
  *	Size: 32 Bytes
@@ -99,5 +101,9 @@ void	show_alloc_mem_ex(int flags);
 void	*alloc_amount(int type, size_t total, size_t memsize);
 void	update_next_block(t_zone *zone, t_block *block);
 void	*create_new_zone(t_zone **head, size_t size);
+
+int		update_memory_visualizer();
+void	init_memory_visualizer();
+void	free_memory_visualizer();
 
 #endif

@@ -1,39 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   size_to_str.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/12 09:17:10 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/14 14:27:41 by nneronin         ###   ########.fr       */
+/*   Created: 2021/08/14 13:43:08 by nneronin          #+#    #+#             */
+/*   Updated: 2021/08/14 15:03:47 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libmem.h"
-
-int main(void)
+static int	ft_get_size(int nbr)
 {
-	char	*str[1000];
+	int	size;
 
-	int i = -1;
-	init_memory_visualizer();
-	while (++i < 1000)
+	size = 0;
+	if (nbr <= 0)
+		size++;
+	while (nbr != 0)
 	{
-		str[i] = malloc(sizeof(char) * (rand() % 1023));
-		update_memory_visualizer();
-		//usleep(10000);
+		nbr = nbr / 10;
+		size++;
 	}
-	int j;
-	while (--i >= 0)
+	return (size);
+}
+
+void	size_to_str(char *str, int nbr)
+{
+	int	i;
+	int	size;
+
+	i = 0;
+	size = ft_get_size(nbr);
+	if (nbr < 0)
 	{
-		//j = rand() % 1000;
-		//if (str[j])
-		//	free(str[j]);
-		free(str[i]);
-		update_memory_visualizer();
-		//usleep(10000);
+		str[0] = '-';
+		i = 1;
+		nbr = -nbr;
 	}
-	free_memory_visualizer();
-	return (0);
+	str[size] = '\0';
+	while (size > i)
+	{
+		str[size - 1] = nbr % 10 + '0';
+		nbr = nbr / 10;
+		size--;
+	}
 }

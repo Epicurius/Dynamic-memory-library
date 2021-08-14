@@ -1,0 +1,2 @@
+clear
+norminette-beta srcs

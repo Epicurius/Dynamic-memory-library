@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/13 16:51:33 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/13 16:52:48 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/14 13:06:11 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME =			test_malloc
 
 CC =			gcc
 
-FLAGS =			-Wall -Werror -Wextra
+FLAGS =			#-Wall -Werror -Wextra
 
 FT_MALLOC =		../libft_malloc.so
 

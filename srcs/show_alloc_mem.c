@@ -6,17 +6,15 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 14:37:33 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/13 15:13:29 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/14 15:03:16 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libmem.h"
 
-#define ROW_SIZE	15
-
 static void	hexdump_row(unsigned char *c, size_t num)
 {
-	size_t			i;
+	size_t	i;
 
 	ft_printf("\t   [");
 	i = -1;
@@ -114,11 +112,14 @@ void	show_alloc_mem(void)
 	pthread_mutex_unlock(&g_alloc.mutex);
 }
 
-
+/*
+ *	TODO: Memory sum.
+ */
 void	show_alloc_mem_ex(int flags)
 {
 	pthread_mutex_lock(&g_alloc.mutex);
-	if (!(flags & MEM_SHOW_SMALL) && !(flags & MEM_SHOW_LARGE) && !(flags & MEM_SHOW_TINY))
+	if (!(flags & MEM_SHOW_SMALL) && !(flags & MEM_SHOW_LARGE)
+		&& !(flags & MEM_SHOW_TINY))
 		flags = MEM_SHOW_SMALL | MEM_SHOW_LARGE | MEM_SHOW_TINY | flags;
 	if (flags & MEM_SHOW_TINY)
 	{
@@ -137,4 +138,3 @@ void	show_alloc_mem_ex(int flags)
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
 }
-

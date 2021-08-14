@@ -72,7 +72,7 @@ void	*alloc_amount(int type, size_t total, size_t memsize)
 void	*malloc(size_t size)
 {
 	void	*mem;
-	
+
 	pthread_mutex_lock(&g_alloc.mutex);
 	if (size <= 0)
 		mem = NULL;

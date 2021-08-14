@@ -20,7 +20,7 @@ void	*calloc(size_t num, size_t size)
 {
 	void	*mem;
 	size_t	total;
-	
+
 	pthread_mutex_lock(&g_alloc.mutex);
 	total = num * size;
 	if (total <= 0)
