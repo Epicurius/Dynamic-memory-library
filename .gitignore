@@ -1,1 +1,7 @@
 libmem.a
+objs
+tests/obj
+.DS_Store
+.vscode
+a.out
+*.so

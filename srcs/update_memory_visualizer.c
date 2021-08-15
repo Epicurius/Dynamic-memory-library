@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 11:25:31 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/14 15:05:51 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/15 10:43:23 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	blit_sizes(size_t size, char *type, int i)
 	SDL_Rect	dstr;
 	TTF_Font	*font;
 
-	font = TTF_OpenFont("/Users/nneronin/Desktop/malloc/Digital.ttf", 20);
+	font = TTF_OpenFont("/Users/nneronin/Desktop/malloc/visualizer/Digital.ttf", 20);
 	if (!font)
 		error_msg("Could not open font: %s\n", TTF_GetError());
 	size_to_str(str, size);
@@ -45,7 +45,7 @@ void	blit_info(int i)
 	SDL_Rect	dstr;
 	TTF_Font	*font;
 
-	font = TTF_OpenFont("/Users/nneronin/Desktop/malloc/Digital.ttf", 20);
+	font = TTF_OpenFont("/Users/nneronin/Desktop/malloc/visualizer/Digital.ttf", 20);
 	if (!font)
 		error_msg("Could not open font: %s\n", TTF_GetError());
 	tmp = TTF_RenderText_Blended(font, VISUAIZER_INFO,

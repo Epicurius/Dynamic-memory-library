@@ -6,15 +6,15 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 08:36:27 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/14 14:53:28 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/15 10:41:27 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MEMORY_VISUALIZER_H
 # define MEMORY_VISUALIZER_H
 
-#  include "../frameworks/SDL2.framework/Headers/SDL.h"
-#  include "../frameworks/SDL2_ttf.framework/Headers/SDL_ttf.h"
+#  include "./frameworks/SDL2.framework/Headers/SDL.h"
+#  include "./frameworks/SDL2_ttf.framework/Headers/SDL_ttf.h"
 # include "libmem.h"
 # include "libft.h"
 # include "libpf.h"
