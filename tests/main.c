@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 09:17:10 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/15 10:31:19 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/15 10:48:18 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int main(void)
 	int j;
 	while (--i >= 0)
 	{
-		//j = rand() % 1000;
-		//if (str[j])
-		//	free(str[j]);
-		free(str[i]);
+		j = rand() % 1000;
+		if (str[j])
+			free(str[j]);
+		//free(str[i]);
 		update_memory_visualizer();
 	}
-	sleep(2);
+	sleep(1);
 	free_memory_visualizer();
 	system("leaks a.out");
 	return (0);

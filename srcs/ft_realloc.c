@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/13 11:30:55 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/14 14:50:32 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/15 19:00:27 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,15 @@ int	find_block_and_zone(void *ptr, t_block **block, t_zone **zone)
 void	*realloc(void *ptr, size_t size)
 {
 	void	*new;
-	t_block	*block;
 	t_zone	*zone;
+	t_block	*block;
 
 	if (!ptr)
 		return (malloc(size));
 	new = NULL;
 	if (find_block_and_zone(ptr, &block, &zone))
 	{
-		if (size == 0)
+		if (!size)
 			free(ptr);
 		else if (size <= block->memsize)
 		{

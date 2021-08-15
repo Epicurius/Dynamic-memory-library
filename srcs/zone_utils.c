@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 09:53:00 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/14 15:06:39 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/15 18:49:00 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ void	*new_zone(size_t size)
 	t_zone		*new;
 	t_block		*block;
 
-	new = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	new = mmap(0, size, PROT_READ | PROT_WRITE,
+			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 	if (new == MAP_FAILED)
 		return (NULL);
 	new->next = NULL;

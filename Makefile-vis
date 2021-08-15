@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/15 10:45:03 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/15 18:53:09 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ NAME 		=	libft_malloc_$(HOSTTYPE).so
 
 LINK 		=	libft_malloc.so
 
-FLAGS 		=	#-Wall -Werror -Wextra 
+FLAGS 		=	-Wall -Werror -Wextra 
 
 SDL_DIR		=	$(PWD)/visualizer/frameworks
 FRAMEWORK 	=	-F $(SDL_DIR) -framework SDL2 -framework SDL2_ttf -Wl,-rpath $(SDL_DIR)
@@ -52,6 +52,7 @@ SRCS 		=	ft_malloc.c\
 				ft_free.c\
 				show_alloc_mem.c\
 				zone_utils.c\
+				hexdump.c\
 				visualizer.c\
 				draw.c\
 				size_to_str.c\

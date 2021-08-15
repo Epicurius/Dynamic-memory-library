@@ -101,8 +101,9 @@ void	show_alloc_mem_ex(int flags);
 void	*alloc_amount(int type, size_t total, size_t memsize);
 void	update_next_block(t_zone *zone, t_block *block);
 void	*create_new_zone(t_zone **head, size_t size);
+void	hexdump(t_block *block);
 
-int		update_memory_visualizer();
+void	update_memory_visualizer();
 void	init_memory_visualizer();
 void	free_memory_visualizer();
 

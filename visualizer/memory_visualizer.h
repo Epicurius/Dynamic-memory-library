@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 08:36:27 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/15 10:41:27 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/15 18:55:09 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ typedef struct s_memory_visualizer
 {
 	SDL_Window				*win;
 	SDL_Surface				*surface;
-	t_alloc					alloc;
+	TTF_Font				*font;
 }							t_memory_visualizer;
 
 extern t_memory_visualizer	g_mem_vis;
 
-int			update_memory_visualizer();
+void		update_memory_visualizer();
 void		init_memory_visualizer();
 void		free_memory_visualizer();
 

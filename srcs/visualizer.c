@@ -6,13 +6,13 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 07:57:34 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/14 15:06:30 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/15 18:57:16 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "memory_visualizer.h"
 
-t_memory_visualizer	g_mem_vis = {NULL, NULL};
+t_memory_visualizer	g_mem_vis = {NULL, NULL, NULL};
 
 SDL_Color	hex_to_sdl_color(int hex)
 {
@@ -37,6 +37,10 @@ void	init_sdl(t_memory_visualizer *vis)
 	vis->surface = SDL_GetWindowSurface(vis->win);
 	if (!vis->surface)
 		error_msg("Could not create surface: %s\n", SDL_GetError());
+	vis->font = TTF_OpenFont(
+			"/Users/nneronin/Desktop/malloc/visualizer/Digital.ttf", 20);
+	if (!vis->font)
+		error_msg("Could not open font: %s\n", TTF_GetError());
 }
 
 void	init_memory_visualizer(void)
@@ -51,6 +55,7 @@ void	free_memory_visualizer(void)
 {
 	SDL_FreeSurface(g_mem_vis.surface);
 	SDL_DestroyWindow(g_mem_vis.win);
+	TTF_CloseFont(g_mem_vis.font);
 	SDL_Quit();
 	TTF_Quit();
 }
