@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 10:57:08 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/16 11:20:48 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/16 16:12:35 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 void	copy_malloc_hash(t_block *block, char *hash)
 {
 	int	i;
-	int len;
-	
+	int	len;
+
 	i = -1;
 	len = ft_strlen(hash);
 	while (++i < ft_min(4, len))
-		block->str[i] = hash[i]; 
+		block->str[i] = hash[i];
 }
 
 void	*ft_malloc(size_t size, char *hash)
@@ -30,15 +30,20 @@ void	*ft_malloc(size_t size, char *hash)
 	pthread_mutex_lock(&g_alloc.mutex);
 	if (size <= 0)
 		mem = NULL;
-	else if (size <= TINY_MAX)
-		mem = alloc_amount(TINY, TINY_ZONE_SIZE, size);
-	else if (size <= SMALL_MAX)
-		mem = alloc_amount(SMALL, SMALL_ZONE_SIZE, size);
+	else if (size <= MEM_TINY_MAX)
+		mem = alloc_amount(MEM_TINY, MEM_TINY_ZONE_SIZE, size);
+	else if (size <= MEM_SMALL_MAX)
+		mem = alloc_amount(MEM_SMALL, MEM_SMALL_ZONE_SIZE, size);
 	else
-		mem = alloc_amount(LARGE, BLOCK_SIZE + ZONE_SIZE + size, size);
+		mem = alloc_amount(MEM_LARGE, BLOCK_SIZE + ZONE_SIZE + size, size);
 	if (!mem)
+	{
+		ft_printf("{RED}[ERROR]{RESET} ft_malloc: %s\n", hash);
 		exit(1);
-	copy_malloc_hash((void *)mem - sizeof(t_block), hash);
+	}
+	if (hash)
+		copy_malloc_hash((void *)mem - sizeof(t_block), hash);
+	ft_bzero(mem, size);
 	pthread_mutex_unlock(&g_alloc.mutex);
 	return (mem);
 }

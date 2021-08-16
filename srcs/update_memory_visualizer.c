@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 11:25:31 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/16 09:20:42 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/16 16:50:50 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	blit_sizes(size_t size, char *type, int i)
 
 	size_to_str(str, size);
 	tmp = TTF_RenderText_Blended(g_mem_vis.font, type,
-			hex_to_sdl_color(0xff0f0f0f));
+			hex_to_sdl_color(0x87ff00));
 	dstr = (SDL_Rect){FRAME_MARGIN * 2 + FRAME_WIDTH,
 		FRAME_MARGIN + (FRAME_MARGIN + FRAME_HEIGHT) * i, tmp->w, tmp->h};
 	SDL_BlitSurface(tmp, NULL, g_mem_vis.surface, &dstr);
@@ -29,7 +29,7 @@ void	blit_sizes(size_t size, char *type, int i)
 	dstr.w += tmp->w;
 	dstr.h += tmp->h;
 	tmp = TTF_RenderText_Blended(g_mem_vis.font, str,
-			hex_to_sdl_color(0xff0f0f0f));
+			hex_to_sdl_color(0x87ff00));
 	SDL_BlitSurface(tmp, NULL, g_mem_vis.surface, &dstr);
 	SDL_FreeSurface(tmp);
 	free(str);
@@ -42,7 +42,7 @@ void	blit_info(int i)
 	SDL_Rect	dstr;
 
 	tmp = TTF_RenderText_Blended(g_mem_vis.font, VISUAIZER_INFO,
-			hex_to_sdl_color(0xff0f0f0f));
+			hex_to_sdl_color(0x87ff00));
 	dstr = (SDL_Rect){FRAME_MARGIN,
 		FRAME_MARGIN + (FRAME_MARGIN + FRAME_HEIGHT) * i, tmp->w, tmp->h};
 	SDL_BlitSurface(tmp, NULL, g_mem_vis.surface, &dstr);
@@ -55,7 +55,7 @@ void	update_memory_visualizer_part2(int i)
 	t_zone	*zone;
 	size_t	size;
 
-	zone = g_alloc.zone[LARGE];
+	zone = g_alloc.zone[MEM_LARGE];
 	size = 0;
 	while (zone)
 	{
@@ -76,14 +76,14 @@ void	update_memory_visualizer(void)
 	SDL_memset(g_mem_vis.surface->pixels, 'A',
 		g_mem_vis.surface->h * g_mem_vis.surface->pitch);
 	i = -1;
-	zone = g_alloc.zone[TINY];
+	zone = g_alloc.zone[MEM_TINY];
 	while (zone && ++i < BLOCKS_DISPLAYED)
 	{
 		draw_zone(zone, 0x00d75f, i, &size);
 		blit_sizes(size, "T:", i);
 		zone = zone->next;
 	}
-	zone = g_alloc.zone[SMALL];
+	zone = g_alloc.zone[MEM_SMALL];
 	while (zone && ++i < (BLOCKS_DISPLAYED * 2))
 	{
 		draw_zone(zone, 0x00ffff, i, &size);

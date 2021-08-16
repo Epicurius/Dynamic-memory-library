@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/16 14:55:51 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/16 16:21:56 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ NAME		=	libft_malloc_$(HOSTTYPE).so
 
 LINK		=	libft_malloc.so
 
-FLAGS 		=	-Wall -Werror -Wextra 
+FLAGS 		=	#-Wall -Werror -Wextra 
 
 INCLUDES	=	-I ./include \
 				-I ./lib/libft \
@@ -42,6 +42,8 @@ SRCS 		=	ft_malloc.c\
 				show_alloc_mem.c\
 				zone_utils.c\
 				hexdump.c\
+				ft_malloc_debug.c\
+				ft_mempurge.c
 		
 SRC_DIR = ./srcs/
 OBJ_DIR = ./objs/

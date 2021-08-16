@@ -35,7 +35,6 @@ static void	*find_space(t_zone *zone, size_t size)
 			{
 				block->free = FALSE;
 				block->size = size;
-				//block->checksum = (size_t)block + size;
 				update_next_block(zone, block);
 				return ((void *)block + sizeof(t_block));
 			}
@@ -74,15 +73,14 @@ void	*malloc(size_t size)
 	void	*mem;
 
 	pthread_mutex_lock(&g_alloc.mutex);
-	ft_printf("{DEAD} %lu %lu %d\n", sizeof(t_zone), sizeof(bool), getpagesize());
 	if (size <= 0)
 		mem = NULL;
-	else if (size <= TINY_MAX)
-		mem = alloc_amount(TINY, TINY_ZONE_SIZE, size);
-	else if (size <= SMALL_MAX)
-		mem = alloc_amount(SMALL, SMALL_ZONE_SIZE, size);
+	else if (size <= MEM_TINY_MAX)
+		mem = alloc_amount(MEM_TINY, MEM_TINY_ZONE_SIZE, size);
+	else if (size <= MEM_SMALL_MAX)
+		mem = alloc_amount(MEM_SMALL, MEM_SMALL_ZONE_SIZE, size);
 	else
-		mem = alloc_amount(LARGE, BLOCK_SIZE + ZONE_SIZE + size, size);
+		mem = alloc_amount(MEM_LARGE, BLOCK_SIZE + ZONE_SIZE + size, size);
 	pthread_mutex_unlock(&g_alloc.mutex);
 	return (mem);
 }

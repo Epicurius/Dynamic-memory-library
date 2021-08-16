@@ -21,13 +21,11 @@ static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
 	{
 		curr->size += sizeof(t_block) + curr->next->size;
 		curr->next = curr->next->next;
-		//curr->checksum = (size_t)curr + curr->size;
 	}
 	if (prev && prev->free == TRUE)
 	{
 		prev->size += sizeof(t_block) + curr->size;
 		prev->next = curr->next;
-		//prev->checksum = (size_t)prev + prev->size;
 	}
 }
 
@@ -112,7 +110,7 @@ static int	check_zone(t_zone **head, void *ptr)
 
 /*
  *	Dont know where the memory is, so checking starting from:
- *	TINY -> SMALL -> LARGE -> ERROR
+ *	MEM_TINY -> MEM_SMALL -> MEM_LARGE -> ERROR
  */
 void	free(void *ptr)
 {
@@ -122,11 +120,11 @@ void	free(void *ptr)
 	pthread_mutex_lock(&g_alloc.mutex);
 	if (ptr)
 	{
-		if (check_zone(&g_alloc.zone[TINY], ptr))
+		if (check_zone(&g_alloc.zone[MEM_TINY], ptr))
 			zone = 1;
-		else if (check_zone(&g_alloc.zone[SMALL], ptr))
+		else if (check_zone(&g_alloc.zone[MEM_SMALL], ptr))
 			zone = 2;
-		else if (check_zone(&g_alloc.zone[LARGE], ptr))
+		else if (check_zone(&g_alloc.zone[MEM_LARGE], ptr))
 			zone = 3;
 		else
 			zone = -1;
