@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/16 11:11:56 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/16 14:55:51 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,39 +22,41 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-NAME =	libft_malloc_$(HOSTTYPE).so
+NAME		=	libft_malloc_$(HOSTTYPE).so
 
-LINK =	libft_malloc.so
+LINK		=	libft_malloc.so
 
-FLAGS =	-Wall -Werror -Wextra 
+FLAGS 		=	-Wall -Werror -Wextra 
 
-INCLUDES = -I ./include -I ./lib/libft -I ./lib/libpf
+INCLUDES	=	-I ./include \
+				-I ./lib/libft \
+				-I ./lib/libpf
 
-SRCS =	ft_malloc.c\
-		ft_calloc.c\
-		ft_realloc.c\
-		ft_free.c\
-		show_alloc_mem.c\
-		zone_utils.c\
-		hexdump.c
+LIBS		=	./lib/libft/libft.a\
+				./lib/libpf/libpf.a
+
+SRCS 		=	ft_malloc.c\
+				ft_calloc.c\
+				ft_realloc.c\
+				ft_free.c\
+				show_alloc_mem.c\
+				zone_utils.c\
+				hexdump.c\
 		
-SRC_DIR = ./srcs/ 
+SRC_DIR = ./srcs/
 OBJ_DIR = ./objs/
-OBJS := $(SRCS:.c=.o)
-OBJS :=	$(addprefix $(OBJ_DIR),$(OBJS))
-
-LIBS = ./lib/libft/libft.a ./lib/libpf/libpf.a
+OBJS :=	$(addprefix $(OBJ_DIR),$(SRCS:.c=.o))
 
 all: $(LIBS) $(NAME)
 	@printf $(CYAN)"[INFO]	$(NAME) is up to date!\n"$(RESET)
 
 $(NAME): $(OBJS)
 	@gcc $(OBJS) $(INCLUDES) $(LIBS) $(FLAGS) -fPIC -shared -o $(NAME)
-	@/bin/rm -f $(LINK)
+	@rm -f $(LINK)
 	@ln -s $(NAME) $(LINK)
 
 $(OBJS): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@/bin/mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)
 	@gcc -c $(FLAGS) $(INCLUDES) $< -o $@
 
 $(LIBS):

@@ -102,6 +102,8 @@ void	*calloc(size_t num, size_t size);
 void	*realloc(void *ptr, size_t size);
 void	free(void *ptr);
 
+void	*ft_malloc(size_t size, char *code);
+
 void	show_alloc_mem(void);
 void	show_alloc_mem_ex(int flags);
 void	*alloc_amount(int type, size_t total, size_t size);

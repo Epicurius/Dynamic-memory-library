@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/15 18:53:09 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/16 14:54:51 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,9 @@ CYAN			:= "\e[0;36m"
 RESET			:= "\e[0m"
 
 #make re -f Makefile-vis
+PWD			=	$(shell pwd)
+SDL_DIR		=	$(PWD)/visualizer/frameworks
+FRAMEWORK 	=	-F $(SDL_DIR) -framework SDL2 -framework SDL2_ttf -Wl,-rpath $(SDL_DIR)
 
 SHELL_NAME	:= $(shell uname -s)
 
@@ -26,7 +29,6 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-PWD			=	$(shell pwd)
 
 NAME 		=	libft_malloc_$(HOSTTYPE).so
 
@@ -34,8 +36,6 @@ LINK 		=	libft_malloc.so
 
 FLAGS 		=	-Wall -Werror -Wextra 
 
-SDL_DIR		=	$(PWD)/visualizer/frameworks
-FRAMEWORK 	=	-F $(SDL_DIR) -framework SDL2 -framework SDL2_ttf -Wl,-rpath $(SDL_DIR)
 
 INCLUDES 	=	-I ./include \
 				-I ./lib/libft \
@@ -61,8 +61,7 @@ SRCS 		=	ft_malloc.c\
 		
 SRC_DIR = ./srcs/
 OBJ_DIR = ./objs/
-OBJS := $(SRCS:.c=.o)
-OBJS :=	$(addprefix $(OBJ_DIR),$(OBJS))
+OBJS :=	$(addprefix $(OBJ_DIR),$(SRCS:.c=.o))
 
 
 all: framework $(LIBS) $(NAME)
@@ -70,13 +69,12 @@ all: framework $(LIBS) $(NAME)
 
 $(NAME): $(OBJS)
 	@gcc $(FRAMEWORK) $(OBJS) $(INCLUDES) $(LIBS) $(FLAGS) -fPIC -shared -o $(NAME)
-	@/bin/rm -f $(LINK)
+	@rm -f $(LINK)
 	@ln -s $(NAME) $(LINK)
-	@echo "$(NAME) was successfully created."
 
 $(OBJS): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@/bin/mkdir -p $(OBJ_DIR)
-	@$(CC) -c $(FLAGS) -F $(SDL_DIR) $(INCLUDES) $< -o $@
+	@mkdir -p $(OBJ_DIR)
+	@gcc -c $(FLAGS) -F $(SDL_DIR) $(INCLUDES) $< -o $@
 
 $(LIBS):
 	@make -C ./lib/libft
@@ -87,8 +85,8 @@ clean:
 	@printf $(CYAN)"[INFO]	$(NAME) cleaned\n"$(RESET)
 
 fclean: clean
-	@/bin/rm -f $(NAME) $(LINK)
-	@/bin/rm -f ./*.so
+	rm -f $(NAME) $(LINK)
+	rm -f ./*.so
 
 re: fclean all
 
@@ -104,4 +102,4 @@ else
 endif
 endif
 
-.PHONY: clean, all, fclean, re
+.PHONY: clean, all, fclean, re, framework
