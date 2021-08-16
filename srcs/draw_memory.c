@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 14:52:39 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/14 15:02:29 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/16 09:20:42 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	change(size_t x, size_t min, size_t max)
 }
 
 /*
- *	Multiply block->memsize to get more color variation.
+ *	Multiply block->size to get more color variation.
  */
 static void	draw_block(t_block *block, t_zone *zone, int index)
 {
@@ -35,7 +35,7 @@ static void	draw_block(t_block *block, t_zone *zone, int index)
 	else
 		x_len = FRAME_WIDTH - x_start;
 	x_len = ft_max(x_len, 1);
-	draw_sq(g_mem_vis.surface, block->memsize,
+	draw_sq(g_mem_vis.surface, block->size,
 		(t_point){x_start, y_top}, (t_point){x_len, FRAME_HEIGHT});
 }
 
@@ -51,7 +51,7 @@ void	draw_zone(t_zone *zone, Uint32 color, int i, size_t *size)
 	{
 		if (block->free == FALSE)
 		{
-			*size += block->memsize;
+			*size += block->size;
 			draw_block(block, zone, i);
 		}
 		block = block->next;

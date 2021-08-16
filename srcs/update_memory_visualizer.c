@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 11:25:31 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/15 18:57:31 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/16 09:20:42 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	update_memory_visualizer_part2(int i)
 	size = 0;
 	while (zone)
 	{
-		size += ((t_block *)((void *)zone + sizeof(t_zone)))->memsize;
+		size += ((t_block *)((void *)zone + sizeof(t_zone)))->size;
 		zone = zone->next;
 	}
 	blit_sizes(size, "L:", ++i);

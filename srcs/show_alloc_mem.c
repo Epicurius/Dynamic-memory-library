@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 14:37:33 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/15 18:52:16 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/16 09:20:42 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ static void	print_blocks(t_block *block, int flags)
 		{
 			ft_printf("\t- BLOCK %d: %p - %p : %lu bytes, ", i++,
 				(void *)block + sizeof(t_block),
-				(void *)block + sizeof(t_block) + block->memsize,
-				block->memsize);
+				(void *)block + sizeof(t_block) + block->size,
+				block->size);
 			if (block->free)
 				ft_printf("{GREEN}FREE{RESET}\n");
 			else

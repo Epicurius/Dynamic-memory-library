@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/15 18:52:55 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/16 11:11:56 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ SRCS =	ft_malloc.c\
 		zone_utils.c\
 		hexdump.c
 		
-SRC_DIR = ./srcs/
+SRC_DIR = ./srcs/ 
 OBJ_DIR = ./objs/
 OBJS := $(SRCS:.c=.o)
 OBJS :=	$(addprefix $(OBJ_DIR),$(OBJS))
@@ -49,27 +49,25 @@ all: $(LIBS) $(NAME)
 	@printf $(CYAN)"[INFO]	$(NAME) is up to date!\n"$(RESET)
 
 $(NAME): $(OBJS)
-	gcc $(OBJS) $(INCLUDES) $(LIBS) $(FLAGS) -fPIC -shared -o $(NAME)
+	@gcc $(OBJS) $(INCLUDES) $(LIBS) $(FLAGS) -fPIC -shared -o $(NAME)
 	@/bin/rm -f $(LINK)
 	@ln -s $(NAME) $(LINK)
-	@echo "$(NAME) was successfully created."
 
 $(OBJS): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@/bin/mkdir -p $(OBJ_DIR)
-	$(CC) -c $(FLAGS) $(INCLUDES) $< -o $@
+	@gcc -c $(FLAGS) $(INCLUDES) $< -o $@
 
 $(LIBS):
 	@make -C ./lib/libft
 	@make -C ./lib/libpf
 
 clean:
-	-/bin/rm -f $(OBJS)
-	/usr/bin/find . -name "obj" -maxdepth 1 -type d -empty -delete
+	@rm -f $(OBJS)
 	@printf $(CYAN)"[INFO]	$(NAME) cleaned\n"$(RESET)
 
 fclean: clean
-	/bin/rm -f $(NAME) $(LINK)
-	/bin/rm -f ./*.so
+	rm -f $(NAME) $(LINK)
+	rm -f ./*.so
 
 re: fclean all
 

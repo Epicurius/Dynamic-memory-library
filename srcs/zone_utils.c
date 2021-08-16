@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 09:53:00 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/15 18:49:00 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/16 09:20:42 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,20 @@ void	update_next_block(t_zone *zone, t_block *block)
 {
 	t_block	*new;
 
-	new = (void *)block + sizeof(t_block) + block->memsize;
+	new = (void *)block + sizeof(t_block) + block->size;
 	if (!block->next && (void *)new + sizeof(t_block) < zone->end)
 	{
 		new->next = NULL;
-		new->memsize = zone->end - ((void *)new + sizeof(t_block));
-		new->checksum = (size_t)new + new->memsize;
+		new->size = zone->end - ((void *)new + sizeof(t_block));
+		//new->checksum = (size_t)new + new->size;
 		new->free = TRUE;
 		block->next = new;
 	}
 	else if (block->next && (void *)new + sizeof(t_block) < (void *)block->next)
 	{
 		new->next = block->next;
-		new->memsize = (void *)block->next - ((void *)new + sizeof(t_block));
-		new->checksum = (size_t)new + new->memsize;
+		new->size = (void *)block->next - ((void *)new + sizeof(t_block));
+		//new->checksum = (size_t)new + new->size;
 		new->free = TRUE;
 		block->next = new;
 	}
@@ -58,8 +58,8 @@ void	*new_zone(size_t size)
 	block = (void *)new + sizeof(t_zone);
 	block->next = NULL;
 	block->free = TRUE;
-	block->memsize = size - sizeof(t_zone) - sizeof(t_block);
-	block->checksum = (size_t)block + block->memsize;
+	block->size = size - sizeof(t_zone) - sizeof(t_block);
+	//block->checksum = (size_t)block + block->size;
 	return (new);
 }
 

@@ -19,15 +19,15 @@ static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
 {
 	if (curr->next && curr->next->free == TRUE)
 	{
-		curr->memsize += sizeof(t_block) + curr->next->memsize;
+		curr->size += sizeof(t_block) + curr->next->size;
 		curr->next = curr->next->next;
-		curr->checksum = (size_t)curr + curr->memsize;
+		//curr->checksum = (size_t)curr + curr->size;
 	}
 	if (prev && prev->free == TRUE)
 	{
-		prev->memsize += sizeof(t_block) + curr->memsize;
+		prev->size += sizeof(t_block) + curr->size;
 		prev->next = curr->next;
-		prev->checksum = (size_t)prev + prev->memsize;
+		//prev->checksum = (size_t)prev + prev->size;
 	}
 }
 

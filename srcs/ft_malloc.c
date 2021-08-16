@@ -22,7 +22,7 @@ t_alloc	g_alloc =
  *	Searches through all the blocks in the zone and returns one if
  *	its free and if the memory size is same or less.
  */
-static void	*find_space(t_zone *zone, size_t memsize)
+static void	*find_space(t_zone *zone, size_t size)
 {
 	t_block	*block;
 
@@ -31,11 +31,11 @@ static void	*find_space(t_zone *zone, size_t memsize)
 		block = (void *)zone + sizeof(t_zone);
 		while (block)
 		{
-			if (block->free == TRUE && memsize <= block->memsize)
+			if (block->free == TRUE && size <= block->size)
 			{
 				block->free = FALSE;
-				block->memsize = memsize;
-				block->checksum = (size_t)block + memsize;
+				block->size = size;
+				//block->checksum = (size_t)block + size;
 				update_next_block(zone, block);
 				return ((void *)block + sizeof(t_block));
 			}
@@ -50,18 +50,18 @@ static void	*find_space(t_zone *zone, size_t memsize)
  *	If find_space() finds a block with same or less amount of space return it.
  *	else create a new block and return it.
  */
-void	*alloc_amount(int type, size_t total, size_t memsize)
+void	*alloc_amount(int type, size_t total, size_t size)
 {
 	void	*mem;
 	t_zone	*zone;
 
-	mem = find_space(g_alloc.zone[type], memsize);
+	mem = find_space(g_alloc.zone[type], size);
 	if (mem)
 		return (mem);
 	zone = create_new_zone(&g_alloc.zone[type], total);
 	if (!zone)
 		return (NULL);
-	mem = find_space(g_alloc.zone[type], memsize);
+	mem = find_space(g_alloc.zone[type], size);
 	return (mem);
 }
 
@@ -74,6 +74,7 @@ void	*malloc(size_t size)
 	void	*mem;
 
 	pthread_mutex_lock(&g_alloc.mutex);
+	ft_printf("{DEAD} %lu %lu %d\n", sizeof(t_zone), sizeof(bool), getpagesize());
 	if (size <= 0)
 		mem = NULL;
 	else if (size <= TINY_MAX)

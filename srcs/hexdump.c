@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/15 18:51:58 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/15 18:53:39 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/16 09:20:42 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	hexdump(t_block *block)
 	unsigned char	*c;
 
 	c = (unsigned char *)block + sizeof(t_block);
-	i = block->memsize;
+	i = block->size;
 	while (i > 0)
 	{
 		if (i > ROW_SIZE)

@@ -30,7 +30,7 @@
 # define MEM_HEXDUMP 	0x00001000
 # define MEM_SHOW_FREE	0x00010000
 
-enum				e_zone
+enum				e_zone//rename malloc_
 {
 	TINY = 0,
 	SMALL = 1,
@@ -38,11 +38,17 @@ enum				e_zone
 	ALL = 3,
 };
 
+//size_t	align(size_t size = , size_t mask = getpagesize() - 1)
+//{
+//	return ((size + mask) & ~mask);
+//}
+
 /*
+ *	Hive x64
  *	printf("%lu %lu %d\n", sizeof(t_zone), sizeof(t_block), getpagesize());
- *		= 16 32 4096
- *	(128 + 32) * 100 + 16 = 16016 bytes
- *	(1024 + 32) * 100 + 16 = 105616 bytes
+ *		= 16 24 4096
+ *	(128 + 24) * 100 + 16 = 16016 bytes
+ *	(1024 + 24) * 100 + 16 = 105616 bytes
  *	The zone size must be larger.
  *	TODO: adjust zone sizes until optimal amount.
  *	Each zone must contain at least 100 allocations.
@@ -58,7 +64,7 @@ enum				e_zone
 # define VISUAIZER_INFO		"TINY 128 16384     SMALL 1024 106496     LARGE I N F  I N F"
 
 /*
- *	Size: 32 Bytes
+ *	Size: 24 Bytes
  *	Addres to the next block to the right.
  *	Is free or reserved.
  *	The amount of user data.
@@ -68,8 +74,8 @@ typedef struct s_block
 {
 	struct s_block	*next;
 	int				free;
-	size_t			memsize;
-	size_t			checksum; //Maybe remove and let visualizer calculate.
+	char			str[4]; //14,950 will work on x32 system.
+	size_t			size;
 }					t_block;
 
 /*
@@ -86,19 +92,19 @@ typedef struct s_zone
 typedef struct s_alloc
 {
 	t_zone			*zone[3];
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	mutex;//moev out saves space
 }					t_alloc;
 
 extern t_alloc		g_alloc;
 
-void	*malloc(size_t memsize);
+void	*malloc(size_t size);
 void	*calloc(size_t num, size_t size);
 void	*realloc(void *ptr, size_t size);
 void	free(void *ptr);
 
 void	show_alloc_mem(void);
 void	show_alloc_mem_ex(int flags);
-void	*alloc_amount(int type, size_t total, size_t memsize);
+void	*alloc_amount(int type, size_t total, size_t size);
 void	update_next_block(t_zone *zone, t_block *block);
 void	*create_new_zone(t_zone **head, size_t size);
 void	hexdump(t_block *block);

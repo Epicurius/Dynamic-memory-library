@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/13 11:30:55 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/15 19:00:27 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/16 09:20:42 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,10 @@ void	*realloc(void *ptr, size_t size)
 	{
 		if (!size)
 			free(ptr);
-		else if (size <= block->memsize)
+		else if (size <= block->size)
 		{
-			block->memsize = size;
-			block->checksum = (size_t)block + block->memsize;
+			block->size = size;
+			//block->checksum = (size_t)block + block->size;
 			update_next_block(zone, block);
 			new = ptr;
 		}
@@ -90,7 +90,7 @@ void	*realloc(void *ptr, size_t size)
 			new = malloc(size);
 			if (!new)
 				return (NULL);
-			ft_memcpy(new, ptr, ft_min(block->memsize, size));
+			ft_memcpy(new, ptr, ft_min(block->size, size));
 			free(ptr);
 		}
 	}
