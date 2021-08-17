@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hexdump.c                                          :+:      :+:    :+:   */
+/*   show_alloc_mem_ex.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/15 18:51:58 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/16 17:34:12 by nneronin         ###   ########.fr       */
+/*   Created: 2021/08/12 14:37:33 by nneronin          #+#    #+#             */
+/*   Updated: 2021/08/17 10:37:52 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,42 @@ void	hexdump(t_block *block)
 		}
 		c += ROW_SIZE;
 	}
+}
+
+static void	init_flags(int *fd, int *flags)
+{
+	if (*flags & MEM_WRITE)
+		*fd = creat("./memdump.txt", S_IRUSR | S_IWUSR);
+	else
+		*fd = 1;
+	if (!(*flags & MEM_SHOW_MEM_SMALL) && !(*flags & MEM_SHOW_MEM_LARGE)
+		&& !(*flags & MEM_SHOW_MEM_TINY))
+		*flags = MEM_SHOW_MEM_SMALL | MEM_SHOW_MEM_LARGE
+			| MEM_SHOW_MEM_TINY | *flags;
+}
+
+void	show_alloc_mem_ex(int flags)
+{
+	int	fd;
+
+	pthread_mutex_lock(&g_alloc.mutex);
+	init_flags(&fd, &flags);
+	if (flags & MEM_SHOW_MEM_TINY)
+	{
+		ft_dprintf(fd, "{CLR:41}TINY{RESET}  : %p\n", g_alloc.zone[MEM_TINY]);
+		print_zones(fd, g_alloc.zone[MEM_TINY], flags);
+	}
+	if (flags & MEM_SHOW_MEM_SMALL)
+	{
+		ft_dprintf(fd, "{CLR:51}SMALL{RESET} : %p\n", g_alloc.zone[MEM_SMALL]);
+		print_zones(fd, g_alloc.zone[MEM_SMALL], flags);
+	}
+	if (flags & MEM_SHOW_MEM_LARGE)
+	{
+		ft_dprintf(fd, "{CLR:61}LARGE{RESET} : %p\n", g_alloc.zone[MEM_LARGE]);
+		print_zones(fd, g_alloc.zone[MEM_LARGE], flags);
+	}
+	if (flags & MEM_WRITE)
+		close(fd);
+	pthread_mutex_unlock(&g_alloc.mutex);
 }

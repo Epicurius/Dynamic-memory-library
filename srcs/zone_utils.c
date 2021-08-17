@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 09:53:00 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/16 09:20:42 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/17 08:59:39 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	update_next_block(t_zone *zone, t_block *block)
 	{
 		new->next = NULL;
 		new->size = zone->end - ((void *)new + sizeof(t_block));
-		//new->checksum = (size_t)new + new->size;
 		new->free = TRUE;
 		block->next = new;
 	}
@@ -35,7 +34,6 @@ void	update_next_block(t_zone *zone, t_block *block)
 	{
 		new->next = block->next;
 		new->size = (void *)block->next - ((void *)new + sizeof(t_block));
-		//new->checksum = (size_t)new + new->size;
 		new->free = TRUE;
 		block->next = new;
 	}
@@ -59,7 +57,6 @@ void	*new_zone(size_t size)
 	block->next = NULL;
 	block->free = TRUE;
 	block->size = size - sizeof(t_zone) - sizeof(t_block);
-	//block->checksum = (size_t)block + block->size;
 	return (new);
 }
 

@@ -70,10 +70,10 @@ enum	e_mem_zone
  */
 typedef struct s_block
 {
-	struct s_block	*next;	//8
-	int				free;	//4
-	char			str[4]; //1 * 4
-	size_t			size;	//8
+	struct s_block	*next;
+	int				free;
+	char			str[4];
+	size_t			size;
 }					t_block;
 
 /*
@@ -83,8 +83,8 @@ typedef struct s_block
  */
 typedef struct s_zone
 {
-	struct s_zone	*next;	//8
-	void			*end;	//8
+	struct s_zone	*next;
+	void			*end;
 }					t_zone;
 
 typedef struct s_alloc
@@ -105,11 +105,12 @@ void	update_next_block(t_zone *zone, t_block *block);
 void	*create_new_zone(t_zone **head, size_t size);
 void	size_to_str(char *str, int nbr);
 void	hexdump(t_block *block);
-
+void	print_zones(int fd, t_zone *zone, int flags);
 
 void	show_alloc_mem(void);
 void	show_alloc_mem_ex(int flags);
 void	*ft_malloc(size_t size, char *code);
+void	*ft_memfind(char *hash);
 void	ft_mempurge(void);
 
 void	update_memory_visualizer();

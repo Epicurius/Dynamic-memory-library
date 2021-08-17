@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/13 11:30:55 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/16 16:08:34 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/17 11:06:21 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ static int	find_at_zone(t_zone *zone, void *ptr,
 /*
  *	Find the block and zone where ptr points to.
  */
-int	find_block_and_zone(void *ptr, t_block **block, t_zone **zone)
+static int	find_block_and_zone(void *ptr, void *new,
+	t_block **block, t_zone **zone)
 {
+	new = NULL;
 	if (!ptr)
 		return (0);
 	if (find_at_zone(g_alloc.zone[MEM_TINY], ptr, block, zone))
@@ -73,8 +75,7 @@ void	*realloc(void *ptr, size_t size)
 
 	if (!ptr)
 		return (malloc(size));
-	new = NULL;
-	if (find_block_and_zone(ptr, &block, &zone))
+	if (find_block_and_zone(ptr, &new, &block, &zone))
 	{
 		if (!size)
 			free(ptr);
@@ -87,9 +88,8 @@ void	*realloc(void *ptr, size_t size)
 		else
 		{
 			new = malloc(size);
-			if (!new)
-				return (NULL);
-			ft_memcpy(new, ptr, ft_min(block->size, size));
+			if (new)
+				ft_memcpy(new, ptr, ft_min(block->size, size));
 			free(ptr);
 		}
 	}

@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/16 16:21:56 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/17 10:56:48 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,10 +40,12 @@ SRCS 		=	ft_malloc.c\
 				ft_realloc.c\
 				ft_free.c\
 				show_alloc_mem.c\
+				show_alloc_mem_ex.c\
 				zone_utils.c\
-				hexdump.c\
+				size_to_str.c\
 				ft_malloc_debug.c\
-				ft_mempurge.c
+				ft_mempurge.c\
+				ft_memfind.c\
 		
 SRC_DIR = ./srcs/
 OBJ_DIR = ./objs/
