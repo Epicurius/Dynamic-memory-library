@@ -1,2 +1,2 @@
 clear
-norminette-beta srcs
+norminette-beta srcs ./include ./visualizer/memory_visualizer.h

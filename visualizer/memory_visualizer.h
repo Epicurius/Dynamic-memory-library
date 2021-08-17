@@ -6,15 +6,15 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 08:36:27 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/15 18:55:09 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/17 11:17:22 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MEMORY_VISUALIZER_H
 # define MEMORY_VISUALIZER_H
 
-#  include "./frameworks/SDL2.framework/Headers/SDL.h"
-#  include "./frameworks/SDL2_ttf.framework/Headers/SDL_ttf.h"
+# include "./frameworks/SDL2.framework/Headers/SDL.h"
+# include "./frameworks/SDL2_ttf.framework/Headers/SDL_ttf.h"
 # include "libmem.h"
 # include "libft.h"
 # include "libpf.h"
@@ -41,13 +41,15 @@ typedef struct s_memory_visualizer
 
 extern t_memory_visualizer	g_mem_vis;
 
-void		update_memory_visualizer();
-void		init_memory_visualizer();
-void		free_memory_visualizer();
+void		update_memory_visualizer(void);
+void		init_memory_visualizer(void);
+void		free_memory_visualizer(void);
 
 void		draw_zone(t_zone *zone, Uint32 color, int i, size_t *size);
-void		draw_box(SDL_Surface *surface, Uint32 color, t_point upper_left, t_point dimen);
-void		draw_sq(SDL_Surface *surface, Uint32 color, t_point pos, t_point dimen);
+void		draw_box(SDL_Surface *surface, Uint32 color,
+				t_point upper_left, t_point dimen);
+void		draw_sq(SDL_Surface *surface, Uint32 color,
+				t_point pos, t_point dimen);
 void		size_to_str(char *str, int nbr);
 SDL_Color	hex_to_sdl_color(int hex);
 

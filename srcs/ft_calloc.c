@@ -26,11 +26,12 @@ void	*calloc(size_t num, size_t size)
 	if (total <= 0)
 		mem = NULL;
 	else if (total <= MEM_TINY_MAX)
-		mem = alloc_amount(MEM_TINY, MEM_TINY_ZONE_SIZE, total);
+		mem = alloc_amount(MEM_TINY, MEM_TINY_sizeof(t_zone), total);
 	else if (total <= MEM_SMALL_MAX)
-		mem = alloc_amount(MEM_SMALL, MEM_SMALL_ZONE_SIZE, total);
+		mem = alloc_amount(MEM_SMALL, MEM_SMALL_sizeof(t_zone), total);
 	else
-		mem = alloc_amount(MEM_LARGE, BLOCK_SIZE + ZONE_SIZE + total, total);
+		mem = alloc_amount(MEM_LARGE, sizeof(t_block)
+				+ sizeof(t_zone) + total, total);
 	if (mem)
 		ft_bzero(mem, total);
 	pthread_mutex_unlock(&g_alloc.mutex);

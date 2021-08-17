@@ -10,20 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef malloc_H
-# define malloc_H
+#ifndef LIBMEM_H
+# define LIBMEM_H
 
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/mman.h>
 # include <errno.h>
 # include <pthread.h>
-#include <fcntl.h>
-#include "stdio.h"
-#include "libpf.h"
+# include <fcntl.h>
+# include "stdio.h"
+# include "libpf.h"
 
-#define TRUE	1
-#define FALSE	0
+# define TRUE	1
+# define FALSE	0
 
 # define MEM_SHOW_MEM_TINY 		0x00000001
 # define MEM_SHOW_MEM_SMALL		0x00000010
@@ -50,15 +50,13 @@ enum	e_mem_zone
  *	TODO: adjust zone sizes until optimal amount.
  *	Each zone must contain at least 100 allocations.
  */
-# define BLOCK_SIZE				sizeof(t_block)
-# define ZONE_SIZE				sizeof(t_zone)
 # define MEM_TINY_MAX			128
-# define MEM_TINY_ZONE_SIZE		16384
+# define MEM_TINY_ZONE			16384
 # define MEM_SMALL_MAX			1024
-# define MEM_SMALL_ZONE_SIZE	106496
+# define MEM_SMALL_ZONE			106496
 # define ROW_SIZE				15
 
-# define VISUAIZER_INFO		"TINY 128 16384     SMALL 1024 106496     LARGE INF  INF"
+# define VISUAIZER_INFO "TINY 128 16384     SMALL 1024 106496     LARGE INF INF"
 
 /*
  *	Size: 24 Bytes
@@ -113,8 +111,8 @@ void	*ft_malloc(size_t size, char *code);
 void	*ft_memfind(char *hash);
 void	ft_mempurge(void);
 
-void	update_memory_visualizer();
-void	init_memory_visualizer();
-void	free_memory_visualizer();
+void	update_memory_visualizer(void);
+void	init_memory_visualizer(void);
+void	free_memory_visualizer(void);
 
 #endif
