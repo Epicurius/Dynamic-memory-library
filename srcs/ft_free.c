@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 10:52:52 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/13 13:35:29 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/21 10:55:35 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,20 +114,15 @@ static int	check_zone(t_zone **head, void *ptr)
  */
 void	free(void *ptr)
 {
-	int	zone;
-
-	zone = 0;
 	pthread_mutex_lock(&g_alloc.mutex);
 	if (ptr)
 	{
-		if (check_zone(&g_alloc.zone[MEM_TINY], ptr))
-			zone = 1;
-		else if (check_zone(&g_alloc.zone[MEM_SMALL], ptr))
-			zone = 2;
-		else if (check_zone(&g_alloc.zone[MEM_LARGE], ptr))
-			zone = 3;
-		else
-			zone = -1;
+		if (!check_zone(&g_alloc.zone[MEM_TINY], ptr))
+			;
+		else if (!check_zone(&g_alloc.zone[MEM_SMALL], ptr))
+			;
+		else if (!check_zone(&g_alloc.zone[MEM_LARGE], ptr))
+			;
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
 }

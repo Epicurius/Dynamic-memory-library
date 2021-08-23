@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 11:54:07 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/13 13:19:22 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/21 10:53:58 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ void	*malloc(size_t size)
 	if (size <= 0)
 		mem = NULL;
 	else if (size <= MEM_TINY_MAX)
-		mem = alloc_amount(MEM_TINY, MEM_TINY_sizeof(t_zone), size);
+		mem = alloc_amount(MEM_TINY, MEM_TINY_ZONE, size);
 	else if (size <= MEM_SMALL_MAX)
-		mem = alloc_amount(MEM_SMALL, MEM_SMALL_sizeof(t_zone), size);
+		mem = alloc_amount(MEM_SMALL, MEM_SMALL_ZONE, size);
 	else
 		mem = alloc_amount(MEM_LARGE, sizeof(t_block)
 				+ sizeof(t_zone) + size, size);
