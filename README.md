@@ -7,7 +7,7 @@ The project was writen in following the Norm. See TheNorm.md in the root of the 
 #### Summary
 
 * [Installation](#installation)
-* [Technologies](#technologies)
+* [Theory](#theory)
 * [Notable Features](#notable-features)
 * [Recreated Functions](#recreated-functions)
 * [Custom Functions](#custom-functions)
@@ -37,7 +37,7 @@ export DYLD_LIBRARY_PATH=__<path to libft_malloc.so>__
 ```
 ---
 
-#### Technologies
+#### Theory
 For each allocation the program has to save some info about the allocation, and it does it in a struct called s_block.
 
 |Variabel				|Explanation												|Bytes	|
@@ -122,12 +122,44 @@ While LARGE allocation allways need to reserve new memory space, and take up __r
 		MEM_SHOW_HASH		=	Print all hash. (Use ft_malloc)	
 		MEM_WRITE		=	Write all output to file.			
 		-----------------------------------------------------------------------
+
 ### Test1
-<img src="./Images/Test1.png" alt="drawing" width="400"/>
+```c
+#inlude "libmem.h"
+
+void	main(void)
+{
+	char *str[5];
+
+	str[0] = malloc(10);
+	str[1] = malloc(400);
+	str[2] = realloc(str[2], 20);
+	str[3] = ft_malloc(5, "STR");
+	str[4] = malloc(2048);
+	free(str[4]);
+	str[4] = malloc(4096);
+	show_alloc_mem_ex(MEM_SHOW_HASH | MEM_SHOW_FREE);
+	ft_mempurge();
+}
+```
 <img src="./Images/Result1.png" alt="drawing" width="800"/>
 
 ### Test2
-<img src="./Images/Test2.png" alt="drawing" width="500"/>
+```c
+#inlude <stdio.h>
+#inlude <string.h>
+#inlude "libmem.h"
+
+void	main(void)
+{
+	char *str;
+
+	str = ft_malloc(sizeof(char) * 12, "TEST");
+	strcpy(str, "Hello World");
+	show_alloc_mem_ex(MEM_SHOW_TINY | MEM_SHOW_HASH | MEM_HEXDUMP);
+	ft_mempurge();
+}
+```
 <img src="./Images/Result2.png" alt="drawing" width="800"/>
 
 
