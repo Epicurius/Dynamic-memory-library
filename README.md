@@ -4,6 +4,8 @@
 The library can be used in programs already in use without modifying them or recompiling.
 The project was writen in following the Norm. See TheNorm.md in the root of the repositorty.
 
+
+![Alt Text](./Images/visualizer.gif)
 ---
 #### How Thigs Work
 For each allocation the program has to save some info about the allocation, and it does it in a struct called s_block.
@@ -82,14 +84,23 @@ While LARGE allocation allways need to reserve new memory space, and take up __r
 	void	show_alloc_mem_ex(int flags)
 		- Print usefull info to stdout.
 		-----------------------------------------------------------------------
-		MEM_SHOW_MEM_TINY	=	Print all TINY memory allocations.	
-		MEM_SHOW_MEM_SMALL	=	Print all SMALL memory allocations.
-		MEM_SHOW_MEM_LARGE	=	Print all LARGE memory allocations.
+		MEM_SHOW_TINY		=	Print all TINY memory allocations.	
+		MEM_SHOW_SMALL		=	Print all SMALL memory allocations.
+		MEM_SHOW_LARGE		=	Print all LARGE memory allocations.
 		MEM_HEXDUMP		=	Print all memory hex positions.	
 		MEM_SHOW_FREE		=	Print all memory slots that are free.
 		MEM_SHOW_HASH		=	Print all hash. (Use ft_malloc)	
 		MEM_WRITE		=	Write all output to file.			
 		-----------------------------------------------------------------------
+### Test1
+<img src="./Images/Test1.png" alt="drawing" width="400"/>
+<img src="./Images/Result1.png" alt="drawing" width="800"/>
+
+### Test2
+<img src="./Images/Test2.png" alt="drawing" width="500"/>
+<img src="./Images/Result2.png" alt="drawing" width="800"/>
+
+
 ---
 ####	Visualizer functions
 	void	init_memory_visualizer(void);
@@ -98,4 +109,7 @@ While LARGE allocation allways need to reserve new memory space, and take up __r
 		- Each time is called redraws all the memomry.
 	void	free_memory_visualizer(void);
 		- Frees everything allocated by the visualizer.
+
+![Alt Text](./Images/visualizer.gif)
+
 ---
