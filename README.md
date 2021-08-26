@@ -142,7 +142,7 @@ void	main(void)
 	ft_mempurge();
 }
 ```
-<img src="./Images/Result1.png" alt="drawing" width="800"/>
+<img src="./Images/Result1.png" alt="drawing" width="900"/>
 
 ### Test2
 ```c
@@ -160,7 +160,7 @@ void	main(void)
 	ft_mempurge();
 }
 ```
-<img src="./Images/Result2.png" alt="drawing" width="800"/>
+<img src="./Images/Result2.png" alt="drawing" width="900"/>
 
 
 ---
