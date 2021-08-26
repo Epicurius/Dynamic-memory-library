@@ -4,10 +4,37 @@
 The library can be used in programs already in use without modifying them or recompiling.
 The project was writen in following the Norm. See TheNorm.md in the root of the repositorty.
 
+#### Summary
+
+* [Installation](#installation)
+* [Technologies](#technologies)
+* [Notable Features](#notable-features)
+* [Recreated Functions](#recreated-functions)
+* [Custom Functions](#custom-functions)
+* [Visualizer Functions](#visualizer-functions)
 
 <img src="./Images/Visualizer.gif" alt="drawing" width="800"/>
+
+#### Installation
+
+```sh
+git clone https://github.com/Epicurius/Dynamic-memory-library.git libmalloc
+cd libmalloc
+
+# to create a standard
+make -f Makefile
+
+# to create with visualizer
+make -f Makefile-visualizer
+
+# In your project root:
+export DYLD_LIBRARY_PATH=.
+export DYLD_INSERT_LIBRARIES="libft_malloc.so"
+export DYLD_FORCE_FLAT_NAMESPACE=1
+```
 ---
-#### How Thigs Work
+
+#### Technologies
 For each allocation the program has to save some info about the allocation, and it does it in a struct called s_block.
 
 |Variabel				|Explanation												|Bytes	|
@@ -47,7 +74,7 @@ This makes small allocation a lot faster and more memory efficient.
 While LARGE allocation allways need to reserve new memory space, and take up __requested size + sizeof(t_block) + sizeof(t_zone)__.
 
 ---
-#### Notable features.
+#### Notable Features
 
 -	When type SMALL or LARGE memory is freed the only thing that happen is the t_block->free is set to TRUE.
 	The memory is not erased it is just marked for re use.
@@ -64,7 +91,7 @@ While LARGE allocation allways need to reserve new memory space, and take up __r
 -	ft_mempurge(void) frees all the memory allocted by malloc, realloc, calloc, ft_malloc.
 	Without the developer having to free every indiviual memory block themselves.
 ---
-####	Functions that mimic existing functions.
+####	Recreated Functions
 	void	*malloc(size_t size)
 		- Allocates size_t size amount of memory.
 	void	*calloc(size_t num, size_t size)
@@ -74,7 +101,7 @@ While LARGE allocation allways need to reserve new memory space, and take up __r
 	void	free(void *ptr)
 		- Frees the memory pointed to by *ptr.
 ---
-####	Personal help functions
+####	Custom Functions
 	void	*ft_malloc(size_t size, char *code)
 		- Allocates size_t size amount of memory and saves code for debugging.
 	void	*ft_memfind(char *hash)
@@ -102,7 +129,7 @@ While LARGE allocation allways need to reserve new memory space, and take up __r
 
 
 ---
-####	Visualizer functions
+####	Visualizer Functions
 	void	init_memory_visualizer(void);
 		- Init visualizer, has to be called once at program start.
 	void	update_memory_visualizer(void);
