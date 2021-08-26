@@ -2,12 +2,13 @@
 ##	My dynamic memory allocation & management library in c.
 
 NOTE: The library can be used in programs already in use without modifying them or recompiling.
+NOTE: The project was writen in following the Norm. See TheNorm.md in the root of the repositorty.
 
-For each allocation the program has to save some info about the allocation, and it does it in a struct called t_block.
+For each allocation the program has to save some info about the allocation, and it does it in a struct called s_block.
 
 |Variabel				|Explanation												|Bytes	|
 |---					|---														|:---:	|
-|struct s_block *next	|Pointer to the next block, NULL if is the last one			|	8	|
+|struct s_block *next	|Pointer to the next block, NULL if is the last one.		|	8	|
 |int free				|TRUE or FALSE is the block is not in use.					|4		|
 |char str[4]			|Struct padding, but is utilized by ft_malloc to save hash.	|1 * 4	|
 |size_t size			|Size of the memory stored.									|8		|
@@ -20,14 +21,14 @@ To solve this the program sorts each allocation call into 3 types (TINY, SMALL, 
 |Type			|	Min Bytes	|	Max Bytes	|	Zone Size	|
 |:--------------|:-------------:|:-------------:|:-------------:|
 |	TINY		|	0			|		128		|	16384		|
-|	SMALL		|	128			|		1024	|	106496		|
-|	LARGE		|	1024		|		INF		|	Exact amount|
+|	SMALL		|	129			|		1024	|	106496		|
+|	LARGE		|	1025		|		INF		|	Exact amount|
 
-For TINY and SMALL the program allocates a predetermined size called Zone.
+For TINY and SMALL the program allocates a predetermined size called Zone (struct s_zone).
 
 |Variabel				|Explanation												|Bytes	|
 |---					|---														|:---:	|
-|struct s_zone *next	|Pointer to the next zone, NULL if is the last one			|	8	|
+|struct s_zone *next	|Pointer to the next zone, NULL if is the last one.			|	8	|
 |void *end				|Pointer to the the end of the zone.						|	8	|
 
 The Zone size is the lowest possible amount of __getpagesize()__ that can fit __((type max + 24) * 100) + sizeof(t_zone)__.
