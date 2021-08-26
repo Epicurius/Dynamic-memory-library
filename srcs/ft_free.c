@@ -117,12 +117,13 @@ void	free(void *ptr)
 	pthread_mutex_lock(&g_alloc.mutex);
 	if (ptr)
 	{
-		if (check_zone(&g_alloc.zone[MEM_TINY], ptr))
-			;
-		else if (check_zone(&g_alloc.zone[MEM_SMALL], ptr))
-			;
-		else if (check_zone(&g_alloc.zone[MEM_LARGE], ptr))
-			;
+		if (check_zone(&g_alloc.zone[MEM_TINY], ptr)
+			|| check_zone(&g_alloc.zone[MEM_SMALL], ptr)
+			|| check_zone(&g_alloc.zone[MEM_LARGE], ptr))
+		{
+			pthread_mutex_unlock(&g_alloc.mutex);
+			return ;
+		}
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
 }

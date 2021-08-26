@@ -27,10 +27,13 @@ make -f Makefile
 # to create with visualizer
 make -f Makefile-visualizer
 
-# In your project root:
-export DYLD_LIBRARY_PATH=.
-export DYLD_INSERT_LIBRARIES="libft_malloc.so"
-export DYLD_FORCE_FLAT_NAMESPACE=1
+# For small projects, only for malloc, realloc and free:
+./run.sh <Your Executable>
+
+# For all features 
+# Link like a normal library and run once
+export DYLD_LIBRARY_PATH=__<path to libft_malloc.so>__
+
 ```
 ---
 
