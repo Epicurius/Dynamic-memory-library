@@ -71,8 +71,8 @@ For TINY and SMALL the program allocates a predetermined size called Zone.
 typedef struct s_zone
 {
 	struct s_zone	*next;
-	void			*end;
-}					t_zone;
+	void		*end;
+}			t_zone;
 ```
 |Variabel				|Explanation												|Bytes	|
 |---					|---														|:---:	|
