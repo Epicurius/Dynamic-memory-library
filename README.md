@@ -5,7 +5,7 @@ The library can be used in programs already in use without modifying them or rec
 The project was writen in following the Norm. See TheNorm.md in the root of the repositorty.
 
 
-<gif src="./Images/Visualizer.gif" alt="drawing" width="800"/>
+<img src="./Images/Visualizer.gif" alt="drawing" width="800"/>
 ---
 #### How Thigs Work
 For each allocation the program has to save some info about the allocation, and it does it in a struct called s_block.
