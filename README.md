@@ -110,6 +110,5 @@ While LARGE allocation allways need to reserve new memory space, and take up __r
 	void	free_memory_visualizer(void);
 		- Frees everything allocated by the visualizer.
 
-![Alt Text](./Images/visualizer.gif)
-
+<img src="./Images/Visualizer.gif" alt="drawing" width="800"/>
 ---
