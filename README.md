@@ -1,7 +1,7 @@
 
 ##	My dynamic memory allocation & management library in c.
 
-The library can be used in programs already in use without modifying them or recompiling.
+My Malloc, Realloc and Free can be used in programs already in use without modifying them or recompiling.
 The project was writen in following the Norm. See TheNorm.md in the root of the repositorty.
 
 #### Summary
@@ -28,18 +28,26 @@ make -f Makefile
 make -f Makefile-visualizer
 
 # For small projects, only for malloc, realloc and free:
-./run.sh <Your Executable>
+./run.sh <EXECUTABLE>
 
-# For all features 
+# For all features:
 # Link like a normal library and run once
-export DYLD_LIBRARY_PATH=__<path to libft_malloc.so>__
+export DYLD_LIBRARY_PATH= < PATH TO libmalloc/ >
 
 ```
 ---
 
 #### Theory
 For each allocation the program has to save some info about the allocation, and it does it in a struct called s_block.
-
+```c
+typedef struct s_block
+{
+	struct s_block	*next;
+	int				free;
+	char			str[4];
+	size_t			size;
+}					t_block;
+```
 |Variabel				|Explanation												|Bytes	|
 |---					|---														|:---:	|
 |struct s_block *next	|Pointer to the next block, NULL if is the last one.		|	8	|
@@ -58,8 +66,14 @@ To solve this the program sorts each allocation call into 3 types (TINY, SMALL, 
 |	SMALL		|	129			|		1024	|	106496		|
 |	LARGE		|	1025		|		INF		|	Exact amount|
 
-For TINY and SMALL the program allocates a predetermined size called Zone (struct s_zone).
-
+For TINY and SMALL the program allocates a predetermined size called Zone.
+```c
+typedef struct s_zone
+{
+	struct s_zone	*next;
+	void			*end;
+}					t_zone;
+```
 |Variabel				|Explanation												|Bytes	|
 |---					|---														|:---:	|
 |struct s_zone *next	|Pointer to the next zone, NULL if is the last one.			|	8	|
