@@ -43,10 +43,10 @@ For each allocation the program has to save some info about the allocation, and 
 typedef struct s_block
 {
 	struct s_block	*next;
-	int				free;
-	char			str[4];
-	size_t			size;
-}					t_block;
+	int		free;
+	char		str[4];
+	size_t		size;
+}			t_block;
 ```
 |Variabel				|Explanation												|Bytes	|
 |---					|---														|:---:	|
