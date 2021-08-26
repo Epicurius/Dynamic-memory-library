@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile-vis                                       :+:      :+:    :+:    #
+#    Makefile-visualizer                                :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/17 10:54:03 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/26 10:54:35 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ MAGENTA			:= "\e[0;35m"
 CYAN			:= "\e[0;36m"
 RESET			:= "\e[0m"
 
-#make re -f Makefile-vis
+#	make re -f Makefile-vis
+
 PWD			=	$(shell pwd)
 SDL_DIR		=	$(PWD)/visualizer/frameworks
 FRAMEWORK 	=	-F $(SDL_DIR) -framework SDL2 -framework SDL2_ttf -Wl,-rpath $(SDL_DIR)
@@ -88,8 +89,7 @@ clean:
 	@printf $(CYAN)"[INFO]	$(NAME) cleaned\n"$(RESET)
 
 fclean: clean
-	rm -f $(NAME) $(LINK)
-	rm -f ./*.so
+	@rm -f $(NAME) $(LINK)
 
 re: fclean all
 

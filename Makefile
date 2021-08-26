@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/12 10:09:02 by nneronin          #+#    #+#              #
-#    Updated: 2021/08/17 10:56:48 by nneronin         ###   ########.fr        #
+#    Updated: 2021/08/26 10:53:25 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ NAME		=	libft_malloc_$(HOSTTYPE).so
 
 LINK		=	libft_malloc.so
 
-FLAGS 		=	#-Wall -Werror -Wextra 
+FLAGS 		=	-Wall -Werror -Wextra 
 
 INCLUDES	=	-I ./include \
 				-I ./lib/libft \
@@ -72,8 +72,7 @@ clean:
 	@printf $(CYAN)"[INFO]	$(NAME) cleaned\n"$(RESET)
 
 fclean: clean
-	rm -f $(NAME) $(LINK)
-	rm -f ./*.so
+	@rm -f $(NAME) $(LINK)
 
 re: fclean all
 

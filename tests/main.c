@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 09:17:10 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/21 11:48:43 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/26 10:55:25 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int main(void)
 
 	int i = -1;
 
-	FT_INFO("HMMM");
 	//init_memory_visualizer();
 	while (++i < 1000)
 	{

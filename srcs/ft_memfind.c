@@ -6,7 +6,7 @@
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 10:40:32 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/17 11:02:49 by nneronin         ###   ########.fr       */
+/*   Updated: 2021/08/26 10:53:57 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	*ft_memfind(char *hash)
 {
 	void	*ptr;
 
+	ptr = NULL;
 	if (!hash)
 		return (NULL);
 	if (find_block(g_alloc.zone[MEM_TINY], hash, ptr))
