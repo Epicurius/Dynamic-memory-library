@@ -1,7 +1,7 @@
 
-##	My dynamic allocation memory management library in c.
+##	My dynamic memory allocation & management library in c.
 
-NOTE: It can be used in programs already in use without modifying them or recompiling.
+NOTE: The library can be used in programs already in use without modifying them or recompiling.
 
 For each allocation the program has to save some info about the allocation, and it does it in a struct called t_block.
 
@@ -41,6 +41,24 @@ Each subsequent malloc call will only use __5 + sizeof(t_block)__.
 When a zone is filled up the next malloc call will create a new zone and repeat the proccess.
 This makes small allocation a lot faster and more memory efficient.
 While LARGE allocation allways need to reserve new memory space, and take up __requested size + sizeof(t_block) + sizeof(t_zone)__.
+
+---
+#### Notable features.
+
+-	When type SMALL or LARGE memory is freed the only thing that happen is the t_block->free is set to TRUE.
+	The memory is not erased it is just marked for re use.
+-	The library will try to “Defragment” freed memory. Meaning if the next or previous block is also
+	free it will merge them into 1 free block.
+-	The Library includes a visualizer. It only runs on OSX and will intall SDL2 Frameworks into ~/Library/Frameworks/.
+	See 'Visualizer functions' section for more info.
+-	Library is “Thread safe”, it should not cause issues if used with pthread.
+-	show_alloc_mem_ex(int flags) is usefull debugging tool. See 'Personal help functions' section for more info.
+-	ft_malloc(size_t *size, char *hash) same as normall malloc but takes in a 4 char hash and saves it in t_block->str.
+	The 4 bytes where going to waste so I use them with ft_malloc() to mark individual memory blocks.
+	The hash can be viewed with	show_alloc_mem_ex(MEM_SHOW_HASH)
+-	ft_memfind(char *hash) returns a pointer to the memory with same hash. Note: Use ft_malloc().
+-	ft_mempurge(void) frees all the memory allocted by malloc, realloc, calloc, ft_malloc.
+	Without the developer having to free every indiviual memory block themselves.
 
 ---
 ####	Functions that mimic existing functions.
