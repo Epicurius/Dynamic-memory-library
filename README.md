@@ -1,8 +1,8 @@
 
 ##	My dynamic memory allocation & management library in c.
 
-My Malloc, Realloc and Free can be used in programs already in use without modifying them or recompiling.
-The project was written in following the Norm. See TheNorm.md in the root of the repository.
+My Malloc, Realloc and Free can be used in programs already in use without modifying them or recompiling. <br>
+The project was written in accordance with the Norm. See TheNorm.md in the root of the repository.<br>
 
 #### Summary
 
@@ -18,7 +18,7 @@ The project was written in following the Norm. See TheNorm.md in the root of the
 #### Installation
 
 ```sh
-git clone https://github.com/Epicurius/Dynamic-memory-library.git libmalloc
+git clone --recurse-submodules https://github.com/Epicurius/Dynamic-memory-library.git libmalloc
 cd libmalloc
 
 # to create a standard
@@ -55,10 +55,10 @@ typedef struct s_block
 |char str[4]			|Struct padding, but is utilized by ft_malloc to save hash.	|1 * 4	|
 |size_t size			|Size of the memory stored.									|8		|
 
-So every time an allocation is called the total size is __requested size + sizeof(t_block)__.
-Now for example we call __malloc(5) 100 times__.
-For each call the program has to reserve memory space, this is slow and wasteful.
-To solve this the program sorts each allocation call into 3 types (TINY, SMALL, LARGE) depending on requested size.
+So every time an allocation is called the total size is __requested size + sizeof(t_block)__.<br>
+Now for example we call __malloc(5) 100 times__.<br>
+For each call the program has to reserve memory space, this is slow and wasteful.<br>
+To solve this the program sorts each allocation call into 3 types (TINY, SMALL, LARGE) depending on requested size.<br>
 
 |Type			|	Min Bytes	|	Max Bytes	|	Zone Size	|
 |:--------------|:-------------:|:-------------:|:-------------:|
@@ -83,12 +83,12 @@ The Zone size is the lowest possible amount of __getpagesize()__ that can fit __
 -	TINY : **(128 + 24) * 100 + 16 = 15216** is less than **4096 * 4 = 16384**
 -	SMALL : **(1024 + 24) * 100 + 16 = 105616** is less than **4096 * 26 = 106496**
 
-So if malloc(5) is called 100 times, the first call will allocate 16384 Bytes, but use only __5 + sizeof(t_block) + sizeof(t_zone)__.
-And for the next 99 times it does not need to reserve memory space, it can utilize the remaining space left over in Zone.
-Each subsequent malloc call will only use __5 + sizeof(t_block)__.
-When a zone is filled up the next malloc call will create a new zone and repeat the process.
-This makes small allocation a lot faster and more memory efficient.
-While LARGE allocation always need to reserve new memory space, and take up __requested size + sizeof(t_block) + sizeof(t_zone)__.
+So if malloc(5) is called 100 times, the first call will allocate 16384 Bytes, but use only __5 + sizeof(t_block) + sizeof(t_zone)__.<br>
+And for the next 99 times it does not need to reserve memory space, it can utilize the remaining space left over in Zone.<br>
+Each subsequent malloc call will only use __5 + sizeof(t_block)__.<br>
+When a zone is filled up the next malloc call will create a new zone and repeat the process.<br>
+This makes small allocation a lot faster and more memory efficient.<br>
+While LARGE allocation always need to reserve new memory space, and take up __requested size + sizeof(t_block) + sizeof(t_zone)__.<br>
 
 ---
 #### Notable Features
