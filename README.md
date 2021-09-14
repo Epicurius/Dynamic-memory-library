@@ -21,14 +21,14 @@ The project was written in accordance with the Norm. See TheNorm.md in the root 
 git clone --recurse-submodules https://github.com/Epicurius/Dynamic-memory-library.git libmalloc
 cd libmalloc
 
-# to create a standard
+# To create a standard
 make -f Makefile
 
-# to create with visualizer
+# To create with visualizer
 make -f Makefile-visualizer
 
-# For small projects, only for malloc, realloc and free:
-./run.sh <EXECUTABLE>
+# To run test_main.c
+./test.sh
 
 # For all features:
 # Link like a normal library and run once
