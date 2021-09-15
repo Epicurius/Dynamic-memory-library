@@ -1,7 +1,8 @@
 
 ##	My dynamic memory allocation & management library in c.
 
-My Malloc, Realloc and Free can be used in programs already in use without modifying them or recompiling. <br>
+NOTE: There are some issues with different platforms/systems!
+My Malloc, Realloc and Free can be used in programs already in use without modifying them or recompiling.<br>
 The project was written in accordance with the Norm. See TheNorm.md in the root of the repository.<br>
 
 #### Summary
@@ -18,8 +19,8 @@ The project was written in accordance with the Norm. See TheNorm.md in the root 
 #### Installation
 
 ```sh
-git clone --recurse-submodules https://github.com/Epicurius/Dynamic-memory-library.git libmalloc
-cd libmalloc
+git clone --recurse-submodules https://github.com/Epicurius/Dynamic-memory-library.git liballoc
+cd liballoc
 
 # To create a standard
 make -f Makefile
@@ -32,7 +33,7 @@ make -f Makefile-visualizer
 
 # For all features:
 # Link like a normal library and run once
-export DYLD_LIBRARY_PATH= < PATH TO libmalloc/ >
+export DYLD_LIBRARY_PATH= < PATH TO liballoc/ >
 
 ```
 ---
