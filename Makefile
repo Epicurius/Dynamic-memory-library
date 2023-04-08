@@ -11,9 +11,9 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-NAME		=	libft_malloc_$(HOSTTYPE).so
+NAME		=	libdm_$(HOSTTYPE).so
 
-LINK		=	libft_malloc.so
+LINK		=	libdm.so
 
 FLAGS 		=	-Wall -Werror -Wextra 
 

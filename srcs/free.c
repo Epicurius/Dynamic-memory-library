@@ -6,7 +6,7 @@
  * Updated: 08/04/2023 Niklas Neronin
  */
 
-#include "libmem.h"
+#include "libdm.h"
 
 /*
  *	Combine blocks if an adjacent block is free.

@@ -6,7 +6,7 @@
  * Updated: 08/04/2023 Niklas Neronin
  */
 
-#include "libmem.h"
+#include "libdm.h"
 
 static void	hexdump_row(unsigned char *c, size_t num)
 {
