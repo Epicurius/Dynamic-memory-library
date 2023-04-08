@@ -1,7 +1,8 @@
 
 ##	My dynamic memory allocation & management library in c.
 
-NOTE: There are some issues with different platforms/systems!
+# NOTE: Currently re-writing the entire library, there were some issues with thread safety.
+
 My Malloc, Realloc and Free can be used in programs already in use without modifying them or recompiling.<br>
 
 #### Summary
