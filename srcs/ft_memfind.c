@@ -38,9 +38,12 @@ void	*ft_memfind(char *hash)
 	if (!hash)
 		return NULL;
 
+	ptr = NULL;
+	pthread_mutex_lock(&g_alloc.mutex);
 	for (int i = MEM_TINY; i <= MEM_LARGE; i++) {
 		if ((ptr = find_block(g_alloc.zone[i], hash)))
-			return ptr;
+			break ;
 	}
-	return NULL;
+	pthread_mutex_unlock(&g_alloc.mutex);
+	return ptr;
 }
