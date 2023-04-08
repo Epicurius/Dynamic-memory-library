@@ -19,10 +19,8 @@ static int	find_block(t_zone *zone, char *hash, void *ptr)
 	while (zone) {
 		block = (void *)zone + sizeof(t_zone);
 		while (block) {
-			if (ft_strequ(block->str, hash)) {
-				ptr = (void *)block + sizeof(t_block);
-				return 1;
-			}
+			if (strcmp(block->str, hash) == 0)
+				return (void *)block + sizeof(t_block);
 			block = block->next;
 		}
 		zone = zone->next;

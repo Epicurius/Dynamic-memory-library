@@ -78,7 +78,7 @@ void	*realloc(void *ptr, size_t size)
 		else {
 			new = malloc(size);
 			if (new)
-				ft_memcpy(new, ptr, ft_min(block->size, size));
+				memcpy(new, ptr, block->size < size ? block->size : size);
 			free(ptr);
 		}
 	}

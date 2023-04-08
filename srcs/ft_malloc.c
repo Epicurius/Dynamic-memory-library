@@ -14,8 +14,9 @@ void	copy_malloc_hash(t_block *block, char *hash)
 	int	len;
 
 	i = -1;
-	len = ft_strlen(hash);
-	while (++i < ft_min(4, len))
+	len = strlen(hash);
+	len > 4 ? len = 4 : 0;
+	while (++i < len)
 		block->str[i] = hash[i];
 }
 
@@ -33,13 +34,12 @@ void	*ft_malloc(size_t size, char *hash)
 	else
 		mem = alloc_amount(MEM_LARGE, sizeof(t_block)
 				+ sizeof(t_zone) + size, size);
-	if (!mem) {
-		ft_printf("{RED}[ERROR]{RESET} ft_malloc: %s\n", hash);
+	if (!mem)
 		exit(1);
-	}
+
 	if (hash)
 		copy_malloc_hash((void *)mem - sizeof(t_block), hash);
-	ft_bzero(mem, size);
+	memset(mem, 0, size);
 	pthread_mutex_unlock(&g_alloc.mutex);
 	return mem;
 }

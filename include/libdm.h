@@ -15,8 +15,8 @@
 # include <errno.h>
 # include <pthread.h>
 # include <fcntl.h>
-# include "stdio.h"
-# include "libpf.h"
+# include <stdio.h>
+# include <string.h>
 
 # define TRUE	1
 # define FALSE	0

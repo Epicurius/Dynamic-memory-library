@@ -10,12 +10,7 @@ YELLOW	:= "\e[0;33m"
 CYAN	:= "\e[0;36m"
 RESET	:= "\e[0m"
 
-LIBS =	./lib/libft/libft.a\
-		./lib/libpf/libpf.a
-
-IDIR =	-I ./include \
-		-I ./lib/libft \
-		-I ./lib/libpf
+IDIR =	-I ./include
 
 RAW =	malloc.c\
 		calloc.c\
@@ -45,7 +40,7 @@ $(ODIR):
 
 $(ODIR)/%.o: $(CDIR)/%.c
 	@printf $(YELLOW)"\e[JCompiling $<\n\e[F"$(RESET)
-	@gcc $(CFLAGS) -fPIC -c $< -o $@ $(IDIR) $(LIBS)
+	@gcc $(CFLAGS) -fPIC -c $< -o $@ $(IDIR)
 
 $(NAME): $(ODIR) $(OBJS)
 	@gcc $(OBJS) $(IDIR) $(CFLAGS) -shared -o $(NAME)

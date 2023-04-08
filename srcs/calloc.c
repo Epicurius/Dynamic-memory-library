@@ -29,7 +29,7 @@ void	*calloc(size_t num, size_t size)
 		mem = alloc_amount(MEM_LARGE, sizeof(t_block)
 				+ sizeof(t_zone) + total, total);
 	if (mem)
-		ft_bzero(mem, total);
+		memset(mem, 0, total);
 	pthread_mutex_unlock(&g_alloc.mutex);
 	return mem;
 }
