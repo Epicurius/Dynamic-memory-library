@@ -95,6 +95,8 @@ void	*calloc(size_t num, size_t size);
 void	*realloc(void *ptr, size_t size);
 void	free(void *ptr);
 
+void	*_malloc(size_t size);
+void	_free(void *ptr);
 void	*alloc_amount(int type, size_t total, size_t size);
 void	update_next_block(t_zone *zone, t_block *block);
 void	*create_new_zone(t_zone **head, size_t size);

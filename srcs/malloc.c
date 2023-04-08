@@ -58,6 +58,21 @@ void	*alloc_amount(int type, size_t total, size_t size)
 }
 
 /*
+ * Private not thread safe 'malloc()'.
+ */
+void	*_malloc(size_t size)
+{
+	if (size <= MEM_TINY_MAX)
+		return alloc_amount(MEM_TINY, MEM_TINY_ZONE, size);
+
+	if (size <= MEM_SMALL_MAX)
+		return alloc_amount(MEM_SMALL, MEM_SMALL_ZONE, size);
+
+	return alloc_amount(MEM_LARGE, sizeof(t_block) + sizeof(t_zone) + size,
+						size);
+}
+
+/*
  *	Mutes pthread to be safe.
  *	Check size type and send to alloc_amount() with current size.
  */
@@ -65,16 +80,11 @@ void	*malloc(size_t size)
 {
 	void	*mem;
 
-	pthread_mutex_lock(&g_alloc.mutex);
 	if (size <= 0)
-		mem = NULL;
-	else if (size <= MEM_TINY_MAX)
-		mem = alloc_amount(MEM_TINY, MEM_TINY_ZONE, size);
-	else if (size <= MEM_SMALL_MAX)
-		mem = alloc_amount(MEM_SMALL, MEM_SMALL_ZONE, size);
-	else
-		mem = alloc_amount(MEM_LARGE, sizeof(t_block)
-				+ sizeof(t_zone) + size, size);
+		return NULL;
+
+	pthread_mutex_lock(&g_alloc.mutex);
+	mem = _malloc(size);
 	pthread_mutex_unlock(&g_alloc.mutex);
 	return mem;
 }

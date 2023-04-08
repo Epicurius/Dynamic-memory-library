@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 08/12/2021 Niklas Neronin
- * Updated: 08/04/2023 Niklas Neronin
+ * Updated: 10/04/2023 Niklas Neronin
  */
 
 #include "libdm.h"
@@ -97,19 +97,26 @@ static int	check_zone(t_zone **head, void *ptr)
 }
 
 /*
+ * Private not thread safe 'free()'.
+ */
+void	_free(void *ptr)
+{
+	for (int i = MEM_TINY; i <= MEM_LARGE; i++) {
+		if (check_zone(&g_alloc.zone[i], ptr))
+			break ;
+	}
+}
+
+/*
  *	Dont know where the memory is, so checking starting from:
  *	MEM_TINY -> MEM_SMALL -> MEM_LARGE -> ERROR
  */
 void	free(void *ptr)
 {
+	if (!ptr)
+		return ;
+
 	pthread_mutex_lock(&g_alloc.mutex);
-	if (ptr) {
-		if (check_zone(&g_alloc.zone[MEM_TINY], ptr)
-			|| check_zone(&g_alloc.zone[MEM_SMALL], ptr)
-			|| check_zone(&g_alloc.zone[MEM_LARGE], ptr)) {
-			pthread_mutex_unlock(&g_alloc.mutex);
-			return ;
-		}
-	}
+	_free(ptr);
 	pthread_mutex_unlock(&g_alloc.mutex);
 }
