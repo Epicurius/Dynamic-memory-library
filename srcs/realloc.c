@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 13/08/2021 Niklas Neronin
- * Updated: 08/04/2023 Niklas Neronin
+ * Updated: 10/04/2023 Niklas Neronin
  */
 
 #include "libdm.h"
@@ -67,20 +67,23 @@ void	*realloc(void *ptr, size_t size)
 		return (malloc(size));
 
 	new = NULL;
+	pthread_mutex_lock(&g_alloc.mutex);
 	if (find_block_and_zone(ptr, &block, &zone)) {
 		if (!size)
-			free(ptr);
+			_free(ptr);
 		else if (size <= block->size) {
 			block->size = size;
 			update_next_block(zone, block);
 			new = ptr;
 		}
 		else {
-			new = malloc(size);
-			if (new)
+			new = _malloc(size);
+			if (new) {
 				memcpy(new, ptr, block->size < size ? block->size : size);
-			free(ptr);
+				_free(ptr);
+			}
 		}
 	}
-	return new;
+	pthread_mutex_unlock(&g_alloc.mutex);
+	return (new);
 }
