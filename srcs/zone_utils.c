@@ -16,7 +16,7 @@
  *	Updated next block:
  *	If block is the last block in this zone.
  *	If block is NOT the last block in this zone.
- *	TODO: find the solution to hangin < 24 bytes
+ *	TODO: find the solution to hanging < 24 bytes
  */
 void	update_next_block(t_zone *zone, t_block *block)
 {

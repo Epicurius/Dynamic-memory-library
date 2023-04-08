@@ -60,10 +60,10 @@ enum	e_mem_zone
 
 /*
  *	Size: 24 Bytes
- *	Addres to the next block to the right.
+ *	Address to the next block to the right.
  *	Is free or reserved.
  *	The amount of user data.
- *	User data + infastructure data size.
+ *	User data + infrastructure data size.
  *	str = 14,950 will work on x32 system.
  */
 typedef struct s_block

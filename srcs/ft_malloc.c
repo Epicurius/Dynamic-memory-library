@@ -66,7 +66,7 @@ void	*alloc_amount(int type, size_t total, size_t size)
 
 /*
  *	Mutes pthread to be safe.
- *	Check size type and send to alloc_amount() with corrent size.
+ *	Check size type and send to alloc_amount() with current size.
  */
 void	*malloc(size_t size)
 {

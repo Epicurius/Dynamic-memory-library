@@ -78,7 +78,7 @@ static int	free_block_chain(t_block *block, void *ptr)
 }
 
 /*
- *	Loop through all the zones and chek if ptr is inside.
+ *	Loop through all the zones and check if ptr is inside.
  *	If is send to free_block_chain().
  *	Check if there are any blocks left in zone.
  *	Else free zone.

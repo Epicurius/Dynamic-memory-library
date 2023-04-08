@@ -13,7 +13,7 @@
 #include "libmem.h"
 
 /*
- *	Loop through all the same type zones and there blocks untill where ptr
+ *	Loop through all the same type zones and there blocks until where ptr
  *	points to is found.
  */
 static int	find_at_zone(t_zone *zone, void *ptr,

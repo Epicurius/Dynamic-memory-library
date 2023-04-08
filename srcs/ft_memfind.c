@@ -13,7 +13,7 @@
 #include "libmem.h"
 
 /*
- *	Loop through all the same type zones and there blocks untill
+ *	Loop through all the same type zones and there blocks until
  *	the block with the same hash is found.
  */
 static int	find_block(t_zone *zone, char *hash, void *ptr)
