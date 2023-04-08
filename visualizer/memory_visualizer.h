@@ -1,14 +1,10 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   memory_visualizer.h                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/14 08:36:27 by nneronin          #+#    #+#             */
-/*   Updated: 2021/08/17 11:17:22 by nneronin         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+/*
+ * -*- coding: utf-8 -*-
+ * vim: ts=4 sw=4 tw=80 et ai si
+ *
+ * Created: 14/08/2021 Niklas Neronin
+ * Updated: 08/04/2023 Niklas Neronin
+ */
 
 #ifndef MEMORY_VISUALIZER_H
 # define MEMORY_VISUALIZER_H
