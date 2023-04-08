@@ -22,13 +22,10 @@ static void	*find_space(t_zone *zone, size_t size)
 {
 	t_block	*block;
 
-	while (zone)
-	{
+	while (zone) {
 		block = (void *)zone + sizeof(t_zone);
-		while (block)
-		{
-			if (block->free == TRUE && size <= block->size)
-			{
+		while (block) {
+			if (block->free == TRUE && size <= block->size) {
 				block->free = FALSE;
 				block->size = size;
 				update_next_block(zone, block);
@@ -38,7 +35,7 @@ static void	*find_space(t_zone *zone, size_t size)
 		}
 		zone = zone->next;
 	}
-	return (NULL);
+	return NULL;
 }
 
 /*
@@ -52,12 +49,12 @@ void	*alloc_amount(int type, size_t total, size_t size)
 
 	mem = find_space(g_alloc.zone[type], size);
 	if (mem)
-		return (mem);
+		return mem;
 	zone = create_new_zone(&g_alloc.zone[type], total);
 	if (!zone)
-		return (NULL);
+		return NULL;
 	mem = find_space(g_alloc.zone[type], size);
-	return (mem);
+	return mem;
 }
 
 /*
@@ -79,5 +76,5 @@ void	*malloc(size_t size)
 		mem = alloc_amount(MEM_LARGE, sizeof(t_block)
 				+ sizeof(t_zone) + size, size);
 	pthread_mutex_unlock(&g_alloc.mutex);
-	return (mem);
+	return mem;
 }

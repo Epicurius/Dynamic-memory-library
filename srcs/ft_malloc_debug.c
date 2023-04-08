@@ -33,8 +33,7 @@ void	*ft_malloc(size_t size, char *hash)
 	else
 		mem = alloc_amount(MEM_LARGE, sizeof(t_block)
 				+ sizeof(t_zone) + size, size);
-	if (!mem)
-	{
+	if (!mem) {
 		ft_printf("{RED}[ERROR]{RESET} ft_malloc: %s\n", hash);
 		exit(1);
 	}
@@ -42,5 +41,5 @@ void	*ft_malloc(size_t size, char *hash)
 		copy_malloc_hash((void *)mem - sizeof(t_block), hash);
 	ft_bzero(mem, size);
 	pthread_mutex_unlock(&g_alloc.mutex);
-	return (mem);
+	return mem;
 }

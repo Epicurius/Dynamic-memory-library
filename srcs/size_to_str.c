@@ -13,12 +13,11 @@ static int	ft_get_size(int nbr)
 	size = 0;
 	if (nbr <= 0)
 		size++;
-	while (nbr != 0)
-	{
+	while (nbr != 0) {
 		nbr = nbr / 10;
 		size++;
 	}
-	return (size);
+	return size;
 }
 
 void	size_to_str(char *str, int nbr)
@@ -28,15 +27,13 @@ void	size_to_str(char *str, int nbr)
 
 	i = 0;
 	size = ft_get_size(nbr);
-	if (nbr < 0)
-	{
+	if (nbr < 0) {
 		str[0] = '-';
 		i = 1;
 		nbr = -nbr;
 	}
 	str[size] = '\0';
-	while (size > i)
-	{
+	while (size > i) {
 		str[size - 1] = nbr % 10 + '0';
 		nbr = nbr / 10;
 		size--;

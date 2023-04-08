@@ -31,5 +31,5 @@ void	*calloc(size_t num, size_t size)
 	if (mem)
 		ft_bzero(mem, total);
 	pthread_mutex_unlock(&g_alloc.mutex);
-	return (mem);
+	return mem;
 }

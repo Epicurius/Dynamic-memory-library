@@ -14,5 +14,5 @@ int	main(void)
 	str[4] = malloc(4096);
 	show_alloc_mem_ex(MEM_SHOW_HASH | MEM_SHOW_FREE);
 	ft_mempurge();
-	return (1);
+	return 1;
 }

@@ -14,8 +14,7 @@ static void	loop_zones(int type)
 	t_zone	*curr;
 
 	zone = g_alloc.zone[type];
-	while (zone)
-	{
+	while (zone) {
 		curr = zone;
 		zone = zone->next;
 		munmap(curr, (void *)curr->end - (void *)curr);

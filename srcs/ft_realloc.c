@@ -17,25 +17,21 @@ static int	find_at_zone(t_zone *zone, void *ptr,
 {
 	t_block	*block;
 
-	while (zone)
-	{
-		if ((void *)zone < ptr && ptr < zone->end)
-		{
+	while (zone) {
+		if ((void *)zone < ptr && ptr < zone->end) {
 			block = (void *)zone + sizeof(t_zone);
-			while (block)
-			{
-				if ((void *)block + sizeof(t_block) == ptr)
-				{
+			while (block) {
+				if ((void *)block + sizeof(t_block) == ptr) {
 					*ptr_block = block;
 					*ptr_zone = zone;
-					return (1);
+					return 1;
 				}
 				block = block->next;
 			}
 		}
 		zone = zone->next;
 	}
-	return (0);
+	return 0;
 }
 
 /*
@@ -46,14 +42,14 @@ static int	find_block_and_zone(void *ptr, void *new,
 {
 	new = NULL;
 	if (!ptr)
-		return (0);
+		return 0;
 	if (find_at_zone(g_alloc.zone[MEM_TINY], ptr, block, zone))
-		return (1);
+		return 1;
 	if (find_at_zone(g_alloc.zone[MEM_SMALL], ptr, block, zone))
-		return (2);
+		return 2;
 	if (find_at_zone(g_alloc.zone[MEM_LARGE], ptr, block, zone))
-		return (3);
-	return (0);
+		return 3;
+	return 0;
 }
 
 /*
@@ -71,23 +67,20 @@ void	*realloc(void *ptr, size_t size)
 
 	if (!ptr)
 		return (malloc(size));
-	if (find_block_and_zone(ptr, &new, &block, &zone))
-	{
+	if (find_block_and_zone(ptr, &new, &block, &zone)) {
 		if (!size)
 			free(ptr);
-		else if (size <= block->size)
-		{
+		else if (size <= block->size) {
 			block->size = size;
 			update_next_block(zone, block);
 			new = ptr;
 		}
-		else
-		{
+		else {
 			new = malloc(size);
 			if (new)
 				ft_memcpy(new, ptr, ft_min(block->size, size));
 			free(ptr);
 		}
 	}
-	return (new);
+	return new;
 }

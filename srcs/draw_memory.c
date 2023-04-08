@@ -10,7 +10,7 @@
 
 int	change(size_t x, size_t min, size_t max)
 {
-	return ((FRAME_WIDTH * (x - min) / (max - min)));
+	return (FRAME_WIDTH * (x - min) / (max - min));
 }
 
 /*
@@ -43,10 +43,8 @@ void	draw_zone(t_zone *zone, Uint32 color, int i, size_t *size)
 	*size = 0;
 	y_top = FRAME_MARGIN + (FRAME_MARGIN + FRAME_HEIGHT) * i;
 	block = (void *)zone + sizeof(t_zone);
-	while (block)
-	{
-		if (block->free == FALSE)
-		{
+	while (block) {
+		if (block->free == FALSE) {
 			*size += block->size;
 			draw_block(block, zone, i);
 		}

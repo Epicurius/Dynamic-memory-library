@@ -13,13 +13,11 @@
  */
 static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
 {
-	if (curr->next && curr->next->free == TRUE)
-	{
+	if (curr->next && curr->next->free == TRUE) {
 		curr->size += sizeof(t_block) + curr->next->size;
 		curr->next = curr->next->next;
 	}
-	if (prev && prev->free == TRUE)
-	{
+	if (prev && prev->free == TRUE) {
 		prev->size += sizeof(t_block) + curr->size;
 		prev->next = curr->next;
 	}
@@ -35,8 +33,7 @@ static void	release_zone(t_zone **head, t_zone *zone, t_zone *prev)
 	size_t		size;
 
 	block = (void *)zone + sizeof(t_zone);
-	while (block)
-	{
+	while (block) {
 		if (block->free == FALSE)
 			return ;
 		block = block->next;
@@ -59,18 +56,16 @@ static int	free_block_chain(t_block *block, void *ptr)
 	t_block	*prev;
 
 	prev = NULL;
-	while (block)
-	{
-		if ((void *)block + sizeof(t_block) == ptr && !block->free)
-		{
+	while (block) {
+		if ((void *)block + sizeof(t_block) == ptr && !block->free) {
 			block->free = TRUE;
 			merge_free_adjacent_blocks(prev, block);
-			return (1);
+			return 1;
 		}
 		prev = block;
 		block = block->next;
 	}
-	return (0);
+	return 0;
 }
 
 /*
@@ -87,21 +82,18 @@ static int	check_zone(t_zone **head, void *ptr)
 
 	zone = *head;
 	prev = NULL;
-	while (zone)
-	{
-		if ((void *)zone < ptr && ptr < zone->end)
-		{
+	while (zone) {
+		if ((void *)zone < ptr && ptr < zone->end) {
 			block = (void *)zone + sizeof(t_zone);
-			if (free_block_chain(block, ptr))
-			{
+			if (free_block_chain(block, ptr)) {
 				release_zone(head, zone, prev);
-				return (1);
+				return 1;
 			}
 		}
 		prev = zone;
 		zone = zone->next;
 	}
-	return (0);
+	return 0;
 }
 
 /*
@@ -111,12 +103,10 @@ static int	check_zone(t_zone **head, void *ptr)
 void	free(void *ptr)
 {
 	pthread_mutex_lock(&g_alloc.mutex);
-	if (ptr)
-	{
+	if (ptr) {
 		if (check_zone(&g_alloc.zone[MEM_TINY], ptr)
 			|| check_zone(&g_alloc.zone[MEM_SMALL], ptr)
-			|| check_zone(&g_alloc.zone[MEM_LARGE], ptr))
-		{
+			|| check_zone(&g_alloc.zone[MEM_LARGE], ptr)) {
 			pthread_mutex_unlock(&g_alloc.mutex);
 			return ;
 		}

@@ -18,7 +18,7 @@ SDL_Color	hex_to_sdl_color(int hex)
 	color.r = hex >> 16;
 	color.g = hex >> 8;
 	color.b = hex;
-	return (color);
+	return color;
 }
 
 void	init_sdl(t_memory_visualizer *vis)

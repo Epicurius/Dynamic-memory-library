@@ -53,8 +53,7 @@ void	update_memory_visualizer_part2(int i)
 
 	zone = g_alloc.zone[MEM_LARGE];
 	size = 0;
-	while (zone)
-	{
+	while (zone) {
 		size += ((t_block *)((void *)zone + sizeof(t_zone)))->size;
 		zone = zone->next;
 	}
@@ -73,15 +72,13 @@ void	update_memory_visualizer(void)
 		g_mem_vis.surface->h * g_mem_vis.surface->pitch);
 	i = -1;
 	zone = g_alloc.zone[MEM_TINY];
-	while (zone && ++i < BLOCKS_DISPLAYED)
-	{
+	while (zone && ++i < BLOCKS_DISPLAYED) {
 		draw_zone(zone, 0x00d75f, i, &size);
 		blit_sizes(size, "T:", i);
 		zone = zone->next;
 	}
 	zone = g_alloc.zone[MEM_SMALL];
-	while (zone && ++i < (BLOCKS_DISPLAYED * 2))
-	{
+	while (zone && ++i < (BLOCKS_DISPLAYED * 2)) {
 		draw_zone(zone, 0x00ffff, i, &size);
 		blit_sizes(size, "S:", i);
 		zone = zone->next;

@@ -16,21 +16,18 @@ static int	find_block(t_zone *zone, char *hash, void *ptr)
 {
 	t_block	*block;
 
-	while (zone)
-	{
+	while (zone) {
 		block = (void *)zone + sizeof(t_zone);
-		while (block)
-		{
-			if (ft_strequ(block->str, hash))
-			{
+		while (block) {
+			if (ft_strequ(block->str, hash)) {
 				ptr = (void *)block + sizeof(t_block);
-				return (1);
+				return 1;
 			}
 			block = block->next;
 		}
 		zone = zone->next;
 	}
-	return (0);
+	return 0;
 }
 
 /*
@@ -42,12 +39,12 @@ void	*ft_memfind(char *hash)
 
 	ptr = NULL;
 	if (!hash)
-		return (NULL);
+		return NULL;
 	if (find_block(g_alloc.zone[MEM_TINY], hash, ptr))
-		return (ptr);
+		return ptr;
 	if (find_block(g_alloc.zone[MEM_SMALL], hash, ptr))
-		return (ptr);
+		return ptr;
 	if (find_block(g_alloc.zone[MEM_LARGE], hash, ptr))
-		return (ptr);
-	return (NULL);
+		return ptr;
+	return NULL;
 }

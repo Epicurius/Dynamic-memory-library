@@ -46,8 +46,7 @@ void	draw_sq(SDL_Surface *surface, Uint32 color, t_point pos, t_point dimen)
 	int			y;
 
 	y = 0;
-	while (y < dimen.y)
-	{
+	while (y < dimen.y) {
 		draw_hline(surface, color, pos, dimen.x);
 		pos.y++;
 		y++;

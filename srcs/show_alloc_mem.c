@@ -13,10 +13,8 @@ static void	print_blocks(int fd, t_block *block, int flags)
 	int	i;
 
 	i = 0;
-	while (block)
-	{
-		if (!block->free || (block->free && flags & MEM_SHOW_FREE))
-		{
+	while (block) {
+		if (!block->free || (block->free && flags & MEM_SHOW_FREE)) {
 			ft_dprintf(fd, "\t- BLOCK %d: %p - %p : %lu bytes, ", i++,
 				(void *)block + sizeof(t_block),
 				(void *)block + sizeof(t_block) + block->size,
@@ -39,8 +37,7 @@ void	print_zones(int fd, t_zone *zone, int flags)
 	int	i;
 
 	i = 0;
-	while (zone)
-	{
+	while (zone) {
 		ft_dprintf(fd, "\tZONE %d : %lu bytes\n", i++,
 			(zone->end - (void *)zone));
 		print_blocks(fd, (void *)zone + sizeof(t_zone), flags);

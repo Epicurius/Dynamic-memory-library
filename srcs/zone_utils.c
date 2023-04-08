@@ -19,15 +19,13 @@ void	update_next_block(t_zone *zone, t_block *block)
 	t_block	*new;
 
 	new = (void *)block + sizeof(t_block) + block->size;
-	if (!block->next && (void *)new + sizeof(t_block) < zone->end)
-	{
+	if (!block->next && (void *)new + sizeof(t_block) < zone->end) {
 		new->next = NULL;
 		new->size = zone->end - ((void *)new + sizeof(t_block));
 		new->free = TRUE;
 		block->next = new;
 	}
-	else if (block->next && (void *)new + sizeof(t_block) < (void *)block->next)
-	{
+	else if (block->next && (void *)new + sizeof(t_block) < (void *)block->next) {
 		new->next = block->next;
 		new->size = (void *)block->next - ((void *)new + sizeof(t_block));
 		new->free = TRUE;
@@ -46,14 +44,14 @@ void	*new_zone(size_t size)
 	new = mmap(NULL, size, PROT_READ | PROT_WRITE,
 		MAP_PRIVATE | MAP_ANON, -1, 0);
 	if (new == MAP_FAILED)
-		return (NULL);
+		return NULL;
 	new->next = NULL;
 	new->end = (void *)new + size;
 	block = (void *)new + sizeof(t_zone);
 	block->next = NULL;
 	block->free = TRUE;
 	block->size = size - sizeof(t_zone) - sizeof(t_block);
-	return (new);
+	return new;
 }
 
 /*
@@ -65,13 +63,12 @@ void	*create_new_zone(t_zone **head, size_t size)
 
 	new = new_zone(size);
 	if (!head || !new)
-		return (NULL);
+		return NULL;
 	if (!*head)
 		*head = new;
-	else
-	{
+	else {
 		new->next = *head;
 		*head = new;
 	}
-	return (new);
+	return new;
 }
