@@ -24,10 +24,10 @@ INCLUDES	=	-I ./include \
 LIBS		=	./lib/libft/libft.a\
 				./lib/libpf/libpf.a
 
-SRCS 		=	ft_malloc.c\
-				ft_calloc.c\
-				ft_realloc.c\
-				ft_free.c\
+SRCS 		=	malloc.c\
+				calloc.c\
+				realloc.c\
+				free.c\
 				show_alloc_mem.c\
 				show_alloc_mem_ex.c\
 				zone_utils.c\
