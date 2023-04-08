@@ -3,7 +3,6 @@
 
 NOTE: There are some issues with different platforms/systems!
 My Malloc, Realloc and Free can be used in programs already in use without modifying them or recompiling.<br>
-The project was written in accordance with the Norm. See TheNorm.md in the root of the repository.<br>
 
 #### Summary
 
