@@ -12,7 +12,7 @@
  *	Loop through all the same type zones and there blocks until
  *	the block with the same hash is found.
  */
-static int	find_block(t_zone *zone, char *hash, void *ptr)
+static void	*find_block(t_zone *zone, char *hash)
 {
 	t_block	*block;
 
@@ -25,7 +25,7 @@ static int	find_block(t_zone *zone, char *hash, void *ptr)
 		}
 		zone = zone->next;
 	}
-	return 0;
+	return NULL;
 }
 
 /*
@@ -35,14 +35,12 @@ void	*ft_memfind(char *hash)
 {
 	void	*ptr;
 
-	ptr = NULL;
 	if (!hash)
 		return NULL;
-	if (find_block(g_alloc.zone[MEM_TINY], hash, ptr))
-		return ptr;
-	if (find_block(g_alloc.zone[MEM_SMALL], hash, ptr))
-		return ptr;
-	if (find_block(g_alloc.zone[MEM_LARGE], hash, ptr))
-		return ptr;
+
+	for (int i = MEM_TINY; i <= MEM_LARGE; i++) {
+		if ((ptr = find_block(g_alloc.zone[i], hash)))
+			return ptr;
+	}
 	return NULL;
 }
