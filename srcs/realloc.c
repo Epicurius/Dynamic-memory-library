@@ -37,10 +37,8 @@ static int	find_at_zone(t_zone *zone, void *ptr,
 /*
  *	Find the block and zone where ptr points to.
  */
-static int	find_block_and_zone(void *ptr, void *new,
-	t_block **block, t_zone **zone)
+static int	find_block_and_zone(void *ptr, t_block **block, t_zone **zone)
 {
-	new = NULL;
 	if (!ptr)
 		return 0;
 	if (find_at_zone(g_alloc.zone[MEM_TINY], ptr, block, zone))
@@ -67,7 +65,9 @@ void	*realloc(void *ptr, size_t size)
 
 	if (!ptr)
 		return (malloc(size));
-	if (find_block_and_zone(ptr, &new, &block, &zone)) {
+
+	new = NULL;
+	if (find_block_and_zone(ptr, &block, &zone)) {
 		if (!size)
 			free(ptr);
 		else if (size <= block->size) {
