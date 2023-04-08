@@ -17,19 +17,15 @@ void	*calloc(size_t num, size_t size)
 	void	*mem;
 	size_t	total;
 
-	pthread_mutex_lock(&g_alloc.mutex);
 	total = num * size;
 	if (total <= 0)
-		mem = NULL;
-	else if (total <= MEM_TINY_MAX)
-		mem = alloc_amount(MEM_TINY, MEM_TINY_ZONE, total);
-	else if (total <= MEM_SMALL_MAX)
-		mem = alloc_amount(MEM_SMALL, MEM_SMALL_ZONE, total);
-	else
-		mem = alloc_amount(MEM_LARGE, sizeof(t_block)
-				+ sizeof(t_zone) + total, total);
+		return NULL;
+
+	pthread_mutex_lock(&g_alloc.mutex);
+	mem = _malloc(total);
 	if (mem)
 		memset(mem, 0, total);
 	pthread_mutex_unlock(&g_alloc.mutex);
+
 	return mem;
 }
