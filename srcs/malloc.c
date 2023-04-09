@@ -3,15 +3,15 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 12/08/2021 Niklas Neronin
- * Updated: 08/04/2023 Niklas Neronin
+ * Updated: 10/04/2023 Niklas Neronin
  */
 
 #include "libdm.h"
 
 t_alloc	g_alloc =
 {
-	{NULL, NULL, NULL},
-	PTHREAD_MUTEX_INITIALIZER
+	.zone = {NULL, NULL, NULL},
+	.mutex = PTHREAD_MUTEX_INITIALIZER
 };
 
 /*

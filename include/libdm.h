@@ -28,6 +28,17 @@ enum	e_mem_zone
 	MEM_LARGE
 };
 
+# define DEBUG(...)	{ \
+	write(1, "\e[0;36mDEBUG\e[0m: ", 18); \
+	write(1, g_alloc.debug"\n", sprintf(g_alloc.debug, __VA_ARGS__) + 1); \
+}
+
+# define ERROR(...) { \
+	write(1, "\e[0;31mERROR\e[0m: ", 18); \
+	write(1, g_alloc.debug"\n", sprintf(g_alloc.debug, __VA_ARGS__) + 1); \
+	exit(1); \
+}
+
 /*
  *	Hive x64
  *	printf("%lu %lu %d\n", sizeof(t_zone), sizeof(t_block), getpagesize());
@@ -74,6 +85,7 @@ typedef struct s_alloc
 {
 	t_zone			*zone[3];
 	pthread_mutex_t	mutex;
+	char 			debug[256];
 }					t_alloc;
 
 extern t_alloc		g_alloc;
