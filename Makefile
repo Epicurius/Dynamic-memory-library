@@ -32,7 +32,7 @@ SRCS 		=	malloc.c\
 				show_alloc_mem_ex.c\
 				zone_utils.c\
 				size_to_str.c\
-				ft_malloc_debug.c\
+				ft_malloc.c\
 				ft_mempurge.c\
 				ft_memfind.c\
 		
