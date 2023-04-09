@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 08/12/2021 Niklas Neronin
- * Updated: 08/04/2023 Niklas Neronin
+ * Updated: 09/04/2023 Niklas Neronin
  */
 
 #ifndef LIBMEM_H
@@ -106,9 +106,5 @@ void	show_alloc_mem_ex(int flags);
 void	*ft_malloc(size_t size, char *code);
 void	*ft_memfind(char *hash);
 void	ft_mempurge(void);
-
-void	update_memory_visualizer(void);
-void	init_memory_visualizer(void);
-void	free_memory_visualizer(void);
 
 #endif
