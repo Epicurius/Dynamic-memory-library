@@ -12,7 +12,6 @@ My Malloc, Realloc and Free can be used in programs already in use without modif
 * [Notable Features](#notable-features)
 * [Recreated Functions](#recreated-functions)
 * [Custom Functions](#custom-functions)
-* [Visualizer Functions](#visualizer-functions)
 
 <img src="./Images/Visualizer.gif" alt="drawing" width="800"/>
 
@@ -24,9 +23,6 @@ cd liballoc
 
 # To create a standard
 make -f Makefile
-
-# To create with visualizer
-make -f Makefile-visualizer
 
 # To run test_main.c
 ./test.sh
@@ -98,8 +94,6 @@ While LARGE allocation always need to reserve new memory space, and take up __re
 	The memory is not erased it is just marked for re use.
 -	The library will try to “Defragment” freed memory. Meaning if the next or previous block is also
 	free it will merge them into 1 free block.
--	The Library includes a visualizer. It only runs on OSX and will install SDL2 Frameworks into ~/Library/Frameworks/.
-	See 'Visualizer functions' section for more info.
 -	Library is “Thread safe”, it should not cause issues if used with pthread.
 -	show_alloc_mem_ex(int flags) is useful debugging tool. See 'Personal help functions' section for more info.
 -	ft_malloc(size_t *size, char *hash) same as standard malloc but takes in a 4 char hash
@@ -178,15 +172,4 @@ void	main(void)
 ```
 <img src="./Images/Result2.png" alt="drawing" width="900"/>
 
-
----
-####	Visualizer Functions
-	void	init_memory_visualizer(void);
-		- Init visualizer, has to be called once at program start.
-	void	update_memory_visualizer(void);
-		- Each time is called redraws all the memory.
-	void	free_memory_visualizer(void);
-		- Frees everything allocated by the visualizer.
-
-<img src="./Images/Visualizer.gif" alt="drawing" width="800"/>
 ---
