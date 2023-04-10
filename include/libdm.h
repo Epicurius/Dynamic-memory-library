@@ -32,6 +32,7 @@
 # define MEM_TINY_ZONE   16384
 # define MEM_SMALL_MAX   1024
 # define MEM_SMALL_ZONE  106496
+# define BYTES_PER_ROW   20
 
 # define TRUE            1
 # define FALSE           0
@@ -55,6 +56,13 @@ enum	e_mem_zone
 	MEM_SMALL,
 	MEM_LARGE
 };
+
+# define MEM_SHOW_TINY  0x00000001
+# define MEM_SHOW_SMALL 0x00000010
+# define MEM_SHOW_LARGE 0x00000100
+# define MEM_SHOW_HEX   0x00001000
+# define MEM_SHOW_FREE  0x00010000
+# define MEM_SHOW_HASH  0x00100000
 
 /*
  *	Size: 24 Bytes
@@ -103,6 +111,7 @@ void	*alloc_amount(int type, size_t total, size_t size);
 void	update_next_block(t_zone *zone, t_block *block);
 void	*create_new_zone(t_zone **head, size_t size);
 
+void	ft_memshow(int fd, int flags);
 void	*ft_malloc(size_t size, char *code);
 void	*ft_memfind(char *hash);
 void	ft_mempurge(void);

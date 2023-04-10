@@ -18,6 +18,7 @@ RAW =	malloc.c\
 		free.c\
 		zone_utils.c\
 		ft_malloc.c\
+		ft_memshow.c\
 		ft_mempurge.c\
 		ft_memfind.c\
 
