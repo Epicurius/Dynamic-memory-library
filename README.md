@@ -18,18 +18,16 @@ My Malloc, Realloc and Free can be used in programs already in use without modif
 #### Installation
 
 ```sh
-git clone --recurse-submodules https://github.com/Epicurius/Dynamic-memory-library.git liballoc
-cd liballoc
-
-# To create a standard
-make -f Makefile
+git clone --recurse-submodules https://github.com/Epicurius/Dynamic-memory-library.git libdm
+cd libdm
+make
 
 # To run test_main.c
 ./test.sh
 
 # For all features:
 # Link like a normal library and run once
-export DYLD_LIBRARY_PATH= < PATH TO liballoc/ >
+export DYLD_LIBRARY_PATH= < PATH TO libdm >
 
 ```
 ---
