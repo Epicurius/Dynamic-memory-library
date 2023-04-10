@@ -12,8 +12,8 @@
  *	Loop through all the same type zones and there blocks until where ptr
  *	points to is found.
  */
-static int	find_at_zone(t_zone *zone, void *ptr,
-	t_block **ptr_block, t_zone **ptr_zone)
+static int find_at_zone(t_zone *zone, void *ptr, t_block **ptr_block,
+						t_zone **ptr_zone)
 {
 	t_block	*block;
 
@@ -39,15 +39,11 @@ static int	find_at_zone(t_zone *zone, void *ptr,
  */
 static int	find_block_and_zone(void *ptr, t_block **block, t_zone **zone)
 {
-	if (!ptr)
-		return 0;
-	if (find_at_zone(g_alloc.zone[MEM_TINY], ptr, block, zone))
-		return 1;
-	if (find_at_zone(g_alloc.zone[MEM_SMALL], ptr, block, zone))
-		return 2;
-	if (find_at_zone(g_alloc.zone[MEM_LARGE], ptr, block, zone))
-		return 3;
-	return 0;
+	for (int i = MEM_TINY; i <= MEM_LARGE; i++) {
+		if (find_at_zone(g_alloc.zone[i], ptr, block, zone))
+			return TRUE;
+	}
+	return FALSE;
 }
 
 /*
