@@ -18,15 +18,23 @@
 # include <stdio.h>
 # include <string.h>
 
-# define TRUE	1
-# define FALSE	0
+/*
+ *	Hive x64
+ *	printf("%lu %lu %d\n", sizeof(t_zone), sizeof(t_block), getpagesize());
+ *		= 16 24 4096
+ *	(128 + 24) * 100 + 16 = 15216  < 4096 * 4
+ *	(1024 + 24) * 100 + 16 = 105616 < 4096 * 26
+ *	The zone size must be larger.
+ *	TODO: adjust zone sizes until optimal amount.
+ *	Each zone must contain at least 100 allocations.
+ */
+# define MEM_TINY_MAX    128
+# define MEM_TINY_ZONE   16384
+# define MEM_SMALL_MAX   1024
+# define MEM_SMALL_ZONE  106496
 
-enum	e_mem_zone
-{
-	MEM_TINY,
-	MEM_SMALL,
-	MEM_LARGE
-};
+# define TRUE            1
+# define FALSE           0
 
 # define DEBUG(...)	{ \
 	write(1, "\e[0;36mDEBUG\e[0m: ", 18); \
@@ -39,20 +47,12 @@ enum	e_mem_zone
 	exit(1); \
 }
 
-/*
- *	Hive x64
- *	printf("%lu %lu %d\n", sizeof(t_zone), sizeof(t_block), getpagesize());
- *		= 16 24 4096
- *	(128 + 24) * 100 + 16 = 15216  < 4096 * 4
- *	(1024 + 24) * 100 + 16 = 105616 < 4096 * 26
- *	The zone size must be larger.
- *	TODO: adjust zone sizes until optimal amount.
- *	Each zone must contain at least 100 allocations.
- */
-# define MEM_TINY_MAX			128
-# define MEM_TINY_ZONE			16384
-# define MEM_SMALL_MAX			1024
-# define MEM_SMALL_ZONE			106496
+enum	e_mem_zone
+{
+	MEM_TINY,
+	MEM_SMALL,
+	MEM_LARGE
+};
 
 /*
  *	Size: 24 Bytes
