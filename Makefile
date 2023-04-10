@@ -21,8 +21,6 @@ RAW =	malloc.c\
 		calloc.c\
 		realloc.c\
 		free.c\
-		show_alloc_mem.c\
-		show_alloc_mem_ex.c\
 		zone_utils.c\
 		ft_malloc.c\
 		ft_mempurge.c\

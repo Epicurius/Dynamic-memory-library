@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 08/12/2021 Niklas Neronin
- * Updated: 09/04/2023 Niklas Neronin
+ * Updated: 10/04/2023 Niklas Neronin
  */
 
 #ifndef LIBMEM_H
@@ -20,14 +20,6 @@
 
 # define TRUE	1
 # define FALSE	0
-
-# define MEM_SHOW_TINY 		0x00000001
-# define MEM_SHOW_SMALL		0x00000010
-# define MEM_SHOW_LARGE 	0x00000100
-# define MEM_HEXDUMP 		0x00001000
-# define MEM_SHOW_FREE		0x00010000
-# define MEM_SHOW_HASH		0x00100000
-# define MEM_WRITE			0x01000000
 
 enum	e_mem_zone
 {
@@ -50,9 +42,6 @@ enum	e_mem_zone
 # define MEM_TINY_ZONE			16384
 # define MEM_SMALL_MAX			1024
 # define MEM_SMALL_ZONE			106496
-# define ROW_SIZE				15
-
-# define VISUAIZER_INFO "TINY 128 16384     SMALL 1024 106496     LARGE INF INF"
 
 /*
  *	Size: 24 Bytes
@@ -97,12 +86,7 @@ void	free(void *ptr);
 void	*alloc_amount(int type, size_t total, size_t size);
 void	update_next_block(t_zone *zone, t_block *block);
 void	*create_new_zone(t_zone **head, size_t size);
-void	size_to_str(char *str, int nbr);
-void	hexdump(t_block *block);
-void	print_zones(int fd, t_zone *zone, int flags);
 
-void	show_alloc_mem(void);
-void	show_alloc_mem_ex(int flags);
 void	*ft_malloc(size_t size, char *code);
 void	*ft_memfind(char *hash);
 void	ft_mempurge(void);
