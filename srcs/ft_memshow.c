@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 10/04/2023 Niklas Neronin
- * Updated: 12/04/2023 Niklas Neronin
+ * Updated: 16/04/2023 Niklas Neronin
  */
 
 #include "libdm.h"
@@ -12,6 +12,73 @@ static int  fd;
 static char *buffer;
 static char *g_hextable = "0123456789abcdef";
 static int  row_size = 2 + BYTES_PER_ROW * 3 + 3;
+
+static void	buffer_hex_and_char(const unsigned char *src, char *dst, int bpr)
+{
+	int i;
+	char *ptr1, *ptr2;
+
+	ptr1 = &dst[0];
+	ptr2 = &dst[row_size / 2 + 1];
+	for (i = 0; i < bpr; i += 1) {
+		/* Buffer hexadecimal representation. */
+		ptr1[0] = g_hextable[src[i] / 16];
+		ptr1[1] = g_hextable[src[i] % 16];
+		ptr1 += 3;
+
+		/* Buffer writable representation. */
+		if (src[i] == '\0') {
+			ptr2[0] = '\\';
+			ptr2[1] = '0';
+		}
+		else if (src[i] >= ' ' && src[i] <= '~') {
+			ptr2[0] = ' ';
+			ptr2[1] = src[i];
+		}
+		else if (src[i] == '\t') {
+			ptr2[0] = '\\';
+			ptr2[1] = 't';
+		}
+		else if (src[i] == '\n') {
+			ptr2[0] = '\\';
+			ptr2[1] = 'n';
+		}
+		else {
+			ptr2[0] = ' ';
+			ptr2[1] = ' ';
+		}
+		ptr2 += 3;
+	}
+}
+
+static void show_char(const unsigned char *data, size_t size)
+{
+	char *buff = buffer;
+	int   bpr = BYTES_PER_ROW / 2 - 1;
+
+	memset(buff, ' ', row_size);
+	buff[0] = '\t';
+	buff[1] = '[';
+	buff[row_size / 2 - 2] = ']';
+	buff[row_size / 2 + 2] = '[';
+	buff[row_size - 2] = ']';
+	buff[row_size - 1] = '\n';
+
+	for (size_t i = 0; i < size; ) {
+		size_t res = i + bpr;
+		if (res > size) {
+			memset(&buff[2], ' ', bpr * 3);
+			memset(&buff[row_size / 2 + 3], ' ', bpr * 3);
+			buffer_hex_and_char(&data[i], &buff[3], size - i);
+			write(fd, buff, row_size);
+			return ;
+		}
+
+		buffer_hex_and_char(&data[i], &buff[3], bpr);
+		write(fd, buff, row_size);
+		i = res;
+	}
+}
 
 static void show_hex(const unsigned char *data, size_t size)
 {
@@ -70,8 +137,10 @@ static void	print_blocks(t_block *block, int flags)
 			}
 			write(fd, buffer, i);
 
-			if (flags & MEM_SHOW_HEX && block->free == FALSE)
-				show_hex((unsigned char *)block + sizeof(t_block), block->size);
+			if (flags & MEM_SHOW_CHAR && block->free == FALSE)
+				show_char((void *)block + sizeof(t_block), block->size);
+			else if (flags & MEM_SHOW_HEX && block->free == FALSE)
+				show_hex((void *)block + sizeof(t_block), block->size);
 		}
 		block = block->next;
 	}

@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 10/04/2023 Niklas Neronin
- * Updated: 10/04/2023 Niklas Neronin
+ * Updated: 16/04/2023 Niklas Neronin
  */
 
 
@@ -17,7 +17,7 @@ int	main(void)
 	arr[1] = calloc(1, 98);
 	memcpy(arr[1], "!\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUV" \
 				   "WXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\n\t\0", 97);
-	ft_memshow(1, MEM_SHOW_HASH | MEM_SHOW_HEX | MEM_SHOW_TINY);
+	ft_memshow(1, MEM_SHOW_HASH | MEM_SHOW_CHAR | MEM_SHOW_TINY);
 	arr[1] = malloc(400);
 	arr[1] = realloc(arr[1], 300);
 	arr[2] = ft_malloc(5, "arr");

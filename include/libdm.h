@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 08/12/2021 Niklas Neronin
- * Updated: 12/04/2023 Niklas Neronin
+ * Updated: 16/04/2023 Niklas Neronin
  */
 
 #ifndef LIBMEM_H
@@ -61,8 +61,9 @@ enum	e_mem_zone
 # define MEM_SHOW_SMALL 0x00000010
 # define MEM_SHOW_LARGE 0x00000100
 # define MEM_SHOW_HEX   0x00001000
-# define MEM_SHOW_FREE  0x00010000
-# define MEM_SHOW_HASH  0x00100000
+# define MEM_SHOW_CHAR  0x00010000
+# define MEM_SHOW_FREE  0x00100000
+# define MEM_SHOW_HASH  0x01000000
 
 /*
  *	Size: 24 Bytes
