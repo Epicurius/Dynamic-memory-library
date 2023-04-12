@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 08/12/2021 Niklas Neronin
- * Updated: 10/04/2023 Niklas Neronin
+ * Updated: 12/04/2023 Niklas Neronin
  */
 
 #ifndef LIBMEM_H
@@ -38,12 +38,14 @@
 
 # define DEBUG(...)	{ \
 	write(1, "\e[0;36mDEBUG\e[0m: ", 18); \
-	write(1, g_alloc.debug"\n", sprintf(g_alloc.debug, __VA_ARGS__) + 1); \
+	write(1, g_alloc.debug, sprintf(g_alloc.debug, __VA_ARGS__)); \
+	write(1, "\n", 1); \
 }
 
 # define ERROR(...) { \
 	write(1, "\e[0;31mERROR\e[0m: ", 18); \
-	write(1, g_alloc.debug"\n", sprintf(g_alloc.debug, __VA_ARGS__) + 1); \
+	write(1, g_alloc.debug, sprintf(g_alloc.debug, __VA_ARGS__)); \
+	write(1, "\n", 1); \
 	exit(1); \
 }
 
