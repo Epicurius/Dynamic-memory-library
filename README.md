@@ -93,11 +93,11 @@ While LARGE allocation always need to reserve new memory space, and take up __re
 -	The library will try to “Defragment” freed memory. Meaning if the next or previous block is also
 	free it will merge them into 1 free block.
 -	Library is “Thread safe”, it should not cause issues if used with pthread.
--	show_alloc_mem_ex(int flags) is useful debugging tool. See 'Personal help functions' section for more info.
+-	ft_memshow(int fd, int flags) is useful debugging tool. See 'Personal help functions' section for more info.
 -	ft_malloc(size_t *size, char *hash) same as standard malloc but takes in a 4 char hash
 	and saves it in t_block->str.
 	The 4 bytes where going to waste so I use them with ft_malloc() to mark individual memory blocks.
-	The hash can be viewed with	show_alloc_mem_ex(MEM_SHOW_HASH)
+	The hash can be viewed with	ft_memshow(1, MEM_SHOW_HASH)
 -	ft_memfind(char *hash) returns a pointer to the memory with same hash. Note: Use ft_malloc().
 -	ft_mempurge(void) frees all the memory allocated by malloc, realloc, calloc, ft_malloc.
 	Without the developer having to free every individual memory block themselves.
@@ -119,16 +119,15 @@ While LARGE allocation always need to reserve new memory space, and take up __re
 		- Find pointer to memory with hash.
 	void	ft_mempurge(void)
 		- Deletes all memory that was allocated.
-	void	show_alloc_mem_ex(int flags)
-		- Print useful info to stdout.
+	void	ft_memshow(int fd, int flags)
+		- Print useful info to 'fd'.
 		-----------------------------------------------------------------------
 		MEM_SHOW_TINY		=	Print all TINY memory allocations.	
 		MEM_SHOW_SMALL		=	Print all SMALL memory allocations.
 		MEM_SHOW_LARGE		=	Print all LARGE memory allocations.
-		MEM_HEXDUMP		=	Print all memory hex positions.	
+		MEM_SHOW_HEX		=	Print each allocated byte in hexadecimal.	
 		MEM_SHOW_FREE		=	Print all memory slots that are free.
-		MEM_SHOW_HASH		=	Print all hash. (Use ft_malloc)	
-		MEM_WRITE		=	Write all output to file.			
+		MEM_SHOW_HASH		=	Print all hash. (Use ft_malloc)			
 		-----------------------------------------------------------------------
 
 ### Test1
@@ -146,7 +145,7 @@ void	main(void)
 	str[4] = malloc(2048);
 	free(str[4]);
 	str[4] = malloc(4096);
-	show_alloc_mem_ex(MEM_SHOW_HASH | MEM_SHOW_FREE);
+	ft_memshow(1, MEM_SHOW_HASH | MEM_SHOW_FREE);
 	ft_mempurge();
 }
 ```
@@ -164,7 +163,7 @@ void	main(void)
 
 	str = ft_malloc(sizeof(char) * 12, "TEST");
 	strcpy(str, "Hello World");
-	show_alloc_mem_ex(MEM_SHOW_TINY | MEM_SHOW_HASH | MEM_HEXDUMP);
+	ft_memshow(1, MEM_SHOW_TINY | MEM_SHOW_HASH | MEM_SHOW_HEX);
 	ft_mempurge();
 }
 ```
