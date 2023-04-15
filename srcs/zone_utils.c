@@ -9,28 +9,58 @@
 #include "libdm.h"
 
 /*
- *	Updated next block:
- *	If block is the last block in this zone.
- *	If block is NOT the last block in this zone.
- *	TODO: find the solution to hanging < 24 bytes
+ * Updated the next block. Next block might refer to the current block, if it
+ * is split into two blocks.
+ *
+ * This function covers these scenarios:
+ * 1. No next block, create one.
+ * 2. Next block is free.
+ *    2.1. Combine current block left overs into next block.
+ *    2.2. No left overs use entire block.
+ * 3. Current block is to large and can be split into two blocks.
+ * 4. Fallback, nothing changes. Happens when current block is the exact size
+ *    or there is no room to split the block.
  */
-void	update_next_block(t_zone *zone, t_block *block)
+void resize_block(t_block *block, size_t size)
 {
-	t_block	*new;
+	t_block	*next = (void *)block + sizeof(t_block) + size;
 
-	new = (void *)block + sizeof(t_block) + block->size;
-	if (!block->next && (void *)new + sizeof(t_block) < zone->end) {
-		new->next = NULL;
-		new->size = zone->end - ((void *)new + sizeof(t_block));
-		new->free = TRUE;
-		block->next = new;
+	if (!block->next) {
+		next->next = NULL;
+		next->size = block->size - sizeof(t_block) - size;
+		next->free = TRUE;
+
+		block->size = size;
+		block->next = next;
 	}
-	else if (block->next && (void *)new + sizeof(t_block) < (void *)block->next) {
-		new->next = block->next;
-		new->size = (void *)block->next - ((void *)new + sizeof(t_block));
-		new->free = TRUE;
-		block->next = new;
+	else if (block->next->free == TRUE) {
+		if (next != block->next) {
+			/*
+			 * Move the next block 't_block' data into the leftover space in the
+			 * current block. The two blocks might overlap, so we use temporary
+			 * variables.
+			 */
+			size_t temp_size = block->next->size;
+			t_block *temp_next = block->next->next;
+
+			next->size = block->size - size + temp_size;
+			next->next = temp_next;
+			next->free = TRUE;
+		}
+
+		block->size = size;
+		block->next = next;
 	}
+	else if (((void *)next + sizeof(t_block)) < (void *)block->next) {
+		next->next = block->next;
+		next->size = (void *)block->next - ((void *)next + sizeof(t_block));
+		next->free = TRUE;
+
+		block->size = size;
+		block->next = next;
+	}
+	else /* Assume the block is the correct size. */
+		block->size = size;
 }
 
 /*

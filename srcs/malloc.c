@@ -27,8 +27,7 @@ static void	*find_space(t_zone *zone, size_t size)
 		while (block) {
 			if (block->free == TRUE && size <= block->size) {
 				block->free = FALSE;
-				block->size = size;
-				update_next_block(zone, block);
+				resize_block(block, size);
 				return ((void *)block + sizeof(t_block));
 			}
 			block = block->next;

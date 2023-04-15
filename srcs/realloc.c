@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 13/08/2021 Niklas Neronin
- * Updated: 10/04/2023 Niklas Neronin
+ * Updated: 15/04/2023 Niklas Neronin
  */
 
 #include "libdm.h"
@@ -68,8 +68,7 @@ void	*realloc(void *ptr, size_t size)
 		if (!size)
 			_free(ptr);
 		else if (size <= block->size) {
-			block->size = size;
-			update_next_block(zone, block);
+			resize_block(block, size);
 			new = ptr;
 		}
 		else {
