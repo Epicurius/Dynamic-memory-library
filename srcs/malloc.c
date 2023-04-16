@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 12/08/2021 Niklas Neronin
- * Updated: 10/04/2023 Niklas Neronin
+ * Updated: 16/04/2023 Niklas Neronin
  */
 
 #include "libdm.h"
@@ -60,7 +60,7 @@ void	*alloc_amount(int type, size_t total, size_t size)
 /*
  * Private not thread safe 'malloc()'.
  */
-void	*_malloc(size_t size)
+void *_malloc(size_t size)
 {
 	if (size <= MEM_TINY_MAX)
 		return alloc_amount(MEM_TINY, MEM_TINY_ZONE, size);
@@ -68,8 +68,12 @@ void	*_malloc(size_t size)
 	if (size <= MEM_SMALL_MAX)
 		return alloc_amount(MEM_SMALL, MEM_SMALL_ZONE, size);
 
-	return alloc_amount(MEM_LARGE, sizeof(t_block) + sizeof(t_zone) + size,
-						size);
+	void *zone = create_new_zone(&g_alloc.zone[MEM_LARGE],
+								 sizeof(t_zone) + sizeof(t_block) + size);
+	if (!zone)
+		return NULL;
+	((t_block *)(zone + sizeof(t_zone)))->free = FALSE;
+	return zone + sizeof(t_zone) + sizeof(t_block);
 }
 
 /*
