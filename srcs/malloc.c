@@ -75,12 +75,11 @@ void *_malloc(size_t size)
 }
 
 /*
- *	Mutes pthread to be safe.
- *	Check size type and send to alloc_amount() with current size.
+ * Public thread safe 'malloc()'.
  */
-void	*malloc(size_t size)
+void *malloc(size_t size)
 {
-	void	*mem;
+	void *mem;
 
 	if (size <= 0)
 		return NULL;
