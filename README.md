@@ -125,7 +125,8 @@ While LARGE allocation always need to reserve new memory space, and take up __re
 		MEM_SHOW_TINY		=	Print all TINY memory allocations.	
 		MEM_SHOW_SMALL		=	Print all SMALL memory allocations.
 		MEM_SHOW_LARGE		=	Print all LARGE memory allocations.
-		MEM_SHOW_HEX		=	Print each allocated byte in hexadecimal.	
+		MEM_SHOW_HEX		=	Print each allocated byte in hexadecimal.
+		MEM_SHOW_CHAR		=	Print each allocated byte in hex and char. (overrides 'MEM_SHOW_HEX')
 		MEM_SHOW_FREE		=	Print all memory slots that are free.
 		MEM_SHOW_HASH		=	Print all hash. (Use ft_malloc)			
 		-----------------------------------------------------------------------
@@ -163,7 +164,7 @@ void	main(void)
 
 	str = ft_malloc(sizeof(char) * 12, "TEST");
 	strcpy(str, "Hello World");
-	ft_memshow(1, MEM_SHOW_TINY | MEM_SHOW_HASH | MEM_SHOW_HEX);
+	ft_memshow(1, MEM_SHOW_TINY | MEM_SHOW_HASH | MEM_SHOW_CHAR);
 	ft_mempurge();
 }
 ```
