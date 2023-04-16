@@ -3,19 +3,29 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 08/12/2021 Niklas Neronin
- * Updated: 10/04/2023 Niklas Neronin
+ * Updated: 16/04/2023 Niklas Neronin
  */
 
 #include "libdm.h"
 
 /*
- *	Combine blocks if an adjacent block is free.
+ * Merge any adjacent free blocks into one free block.
  */
 static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
 {
-	if (curr->next && curr->next->free == TRUE) {
-		curr->size += sizeof(t_block) + curr->next->size;
-		curr->next = curr->next->next;
+	if (curr->next) {
+		/*
+		 * There might be unused memory between blocks. This happens when
+		 * reserving a free block which is between two reserved blocks, and the
+		 * block size is larger than the required size, but to small for
+		 * splitting into two separate blocks.
+		 */
+		curr->size = (void *)curr->next - ((void *)curr + sizeof(t_block));
+
+		if (curr->next->free == TRUE) {
+			curr->size += sizeof(t_block) + curr->next->size;
+			curr->next = curr->next->next;
+		}
 	}
 	if (prev && prev->free == TRUE) {
 		prev->size += sizeof(t_block) + curr->size;
