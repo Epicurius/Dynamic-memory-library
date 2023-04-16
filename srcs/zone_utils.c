@@ -3,7 +3,7 @@
  * vim: ts=4 sw=4 tw=80 et ai si
  *
  * Created: 12/08/2021 Niklas Neronin
- * Updated: 08/04/2023 Niklas Neronin
+ * Updated: 16/04/2023 Niklas Neronin
  */
 
 #include "libdm.h"
@@ -34,24 +34,25 @@ void	update_next_block(t_zone *zone, t_block *block)
 }
 
 /*
- *	Create a new zone and init it.
+ *	Allocate new zone with one free block.
  */
-void	*new_zone(size_t size)
+static void *new_zone(size_t size)
 {
-	t_zone		*new;
+	t_zone		*zone;
 	t_block		*block;
 
-	new = mmap(NULL, size, PROT_READ | PROT_WRITE,
-		MAP_PRIVATE | MAP_ANON, -1, 0);
-	if (new == MAP_FAILED)
+	zone = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON,
+				-1, 0);
+	if (zone == MAP_FAILED)
 		return NULL;
-	new->next = NULL;
-	new->end = (void *)new + size;
-	block = (void *)new + sizeof(t_zone);
+	zone->next = NULL;
+	zone->end = (void *)zone + size;
+
+	block = (void *)zone + sizeof(t_zone);
 	block->next = NULL;
 	block->free = TRUE;
 	block->size = size - sizeof(t_zone) - sizeof(t_block);
-	return new;
+	return zone;
 }
 
 /*
