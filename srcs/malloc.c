@@ -50,7 +50,7 @@ void	*alloc_amount(int type, size_t total, size_t size)
 	mem = find_space(g_alloc.zone[type], size);
 	if (mem)
 		return mem;
-	zone = create_new_zone(&g_alloc.zone[type], total);
+	zone = allocate_zone(&g_alloc.zone[type], total);
 	if (!zone)
 		return NULL;
 	mem = find_space(g_alloc.zone[type], size);
@@ -68,8 +68,8 @@ void *_malloc(size_t size)
 	if (size <= MEM_SMALL_MAX)
 		return alloc_amount(MEM_SMALL, MEM_SMALL_ZONE, size);
 
-	void *zone = create_new_zone(&g_alloc.zone[MEM_LARGE],
-								 sizeof(t_zone) + sizeof(t_block) + size);
+	void *zone = allocate_zone(&g_alloc.zone[MEM_LARGE],
+							   sizeof(t_zone) + sizeof(t_block) + size);
 	if (!zone)
 		return NULL;
 	((t_block *)(zone + sizeof(t_zone)))->free = FALSE;

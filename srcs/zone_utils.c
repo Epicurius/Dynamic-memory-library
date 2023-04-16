@@ -56,20 +56,20 @@ static void *new_zone(size_t size)
 }
 
 /*
- *	Add the zone created buy new_zone() to zone list.
+ * Allocate zone and add it the to list 'head'.
  */
-void	*create_new_zone(t_zone **head, size_t size)
+void *allocate_zone(t_zone **head, size_t size)
 {
-	t_zone	*new;
+	t_zone *zone;
 
-	new = new_zone(size);
-	if (!head || !new)
+	zone = new_zone(size);
+	if (!head || !zone)
 		return NULL;
 	if (!*head)
-		*head = new;
+		*head = zone;
 	else {
-		new->next = *head;
-		*head = new;
+		zone->next = *head;
+		*head = zone;
 	}
-	return new;
+	return zone;
 }
