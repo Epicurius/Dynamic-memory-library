@@ -38,10 +38,9 @@ static void	*find_space(t_zone *zone, size_t size)
 }
 
 /*
- *	If find_space() finds a block with same or less amount of space return it.
- *	else create a new block and return it.
+ * Returns a pointer to user memory after finding and reserving a block.
  */
-void	*alloc_amount(int type, size_t total, size_t size)
+static void *get_free_block(int type, size_t total, size_t size)
 {
 	void	*mem;
 	t_zone	*zone;
@@ -62,10 +61,10 @@ void	*alloc_amount(int type, size_t total, size_t size)
 void *_malloc(size_t size)
 {
 	if (size <= MEM_TINY_MAX)
-		return alloc_amount(MEM_TINY, MEM_TINY_ZONE, size);
+		return get_free_block(MEM_TINY, MEM_TINY_ZONE, size);
 
 	if (size <= MEM_SMALL_MAX)
-		return alloc_amount(MEM_SMALL, MEM_SMALL_ZONE, size);
+		return get_free_block(MEM_SMALL, MEM_SMALL_ZONE, size);
 
 	void *zone = allocate_zone(&g_alloc.zone[MEM_LARGE],
 							   sizeof(t_zone) + sizeof(t_block) + size);
