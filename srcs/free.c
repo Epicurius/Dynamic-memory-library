@@ -8,10 +8,13 @@
 #include "libdm.h"
 
 /*
- * Merge any adjacent free blocks into one free block.
+ * Set 'curr' block to free and merge any adjacent free blocks into one free
+ * block.
  */
-static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
+static void	free_block(t_block *curr, t_block *prev)
 {
+	curr->free = TRUE;
+
 	if (curr->next && curr->next->free == TRUE) {
 		curr->size += sizeof(t_block) + curr->next->size;
 		curr->next = curr->next->next;
@@ -23,94 +26,93 @@ static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
 }
 
 /*
- *	Reliase zone if not reserved blocks found.
- *	And relink if more than 1 zone.
+ * Release allocated memory and relink the previous zone.
  */
-static void	release_zone(t_zone **head, t_zone *zone, t_zone *prev)
+static void free_zone(enum zone_type type, t_zone *zone, t_zone *prev)
 {
-	t_block		*block;
-	size_t		size;
-
-	block = (void *)zone + sizeof(t_zone);
-	while (block) {
-		if (block->free == FALSE)
-			return ;
-		block = block->next;
-	}
 	if (prev)
 		prev->next = zone->next;
 	else
-		*head = zone->next;
-	size = (size_t)(zone->end - (void *)zone);
-	munmap(zone, size);
+		g_alloc.zone[type] = zone->next;
+
+	if (munmap(zone, (size_t)(zone->end - (void *)zone)) == -1)
+		ERROR("freeing zone type '%d' failed", type);
 }
 
 /*
- *	Loop through all the blocks until you find the ptr.
- *	Set to free.
- *	Send to merge_free_adjacent_blocks() to merger block adjacent to ptr.
+ * This function checks the remaining blocks and return whether all block are
+ * free.
  */
-static int	free_block_chain(t_block *block, void *ptr)
+static int is_rest_free(t_block *block)
 {
-	t_block	*prev;
-
-	prev = NULL;
 	while (block) {
-		if ((void *)block + sizeof(t_block) == ptr && !block->free) {
-			block->free = TRUE;
-			merge_free_adjacent_blocks(prev, block);
-			return 1;
-		}
-		prev = block;
+		if (block->free == FALSE)
+			return FALSE;
 		block = block->next;
 	}
-	return 0;
-}
-
-/*
- *	Loop through all the zones and check if ptr is inside.
- *	If is send to free_block_chain().
- *	Check if there are any blocks left in zone.
- *	Else free zone.
- */
-static int	check_zone(t_zone **head, void *ptr)
-{
-	t_zone	*zone;
-	t_zone	*prev;
-	t_block	*block;
-
-	zone = *head;
-	prev = NULL;
-	while (zone) {
-		if ((void *)zone < ptr && ptr < zone->end) {
-			block = (void *)zone + sizeof(t_zone);
-			if (free_block_chain(block, ptr)) {
-				release_zone(head, zone, prev);
-				return 1;
-			}
-		}
-		prev = zone;
-		zone = zone->next;
-	}
-	return 0;
+	return TRUE;
 }
 
 /*
  * Private not thread safe 'free()'.
  */
-void	_free(void *ptr)
+void _free(void *ptr)
 {
-	for (int i = MEM_TINY; i <= MEM_LARGE; i++) {
-		if (check_zone(&g_alloc.zone[i], ptr))
-			break ;
+	t_block *block = ptr - sizeof(t_block);
+	enum zone_type type = get_zone_type(block->size);
+
+	if (block->free == TRUE)
+		ERROR("pointer being freed was not allocated");
+
+	t_zone *curr_zone = g_alloc.zone[type];
+	t_zone *prev_zone = NULL;
+
+	while (curr_zone) {
+		if ((void *)block < (void *)curr_zone ||
+			(void *)block > (void *)curr_zone->end) {
+			prev_zone = curr_zone;
+			curr_zone = curr_zone->next;
+			continue ;
+		}
+
+		if (type == MEM_LARGE) {
+			/* Large zones have only one block */
+			free_zone(type, curr_zone, prev_zone);
+			return ;
+		}
+
+		t_block *curr_block = (void *)curr_zone + sizeof(t_zone);
+		t_block *prev_block = NULL;
+
+		unsigned char zone_free = TRUE;
+		while (curr_block) {
+			if (curr_block != block) {
+				if (curr_block->free == FALSE)
+					zone_free = FALSE;
+				prev_block = curr_block;
+				curr_block = curr_block->next;
+				continue ;
+			}
+
+			if (zone_free && prev_zone && is_rest_free(curr_block->next)) {
+				/* There is more than one zone and the current zone is free */
+				free_zone(type, curr_zone, prev_zone);
+				return ;
+			}
+
+			/* Set current block to free */
+			free_block(curr_block, prev_block);
+			return ;
+		}
+		ERROR("pointer being freed was not allocated");
 	}
+	ERROR("pointer being freed was not allocated");
 }
 
 /*
- *	Dont know where the memory is, so checking starting from:
- *	MEM_TINY -> MEM_SMALL -> MEM_LARGE -> ERROR
+ * Find and free memory pointed to by 'ptr'.
  */
-void	free(void *ptr)
+void free(void *ptr)
 {
 	if (!ptr)
 		return ;
