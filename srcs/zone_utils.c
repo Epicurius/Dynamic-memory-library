@@ -5,7 +5,7 @@
  * Author: Niklas Neronin <niklas.neronin@gmail.com>
  */
 
-#include "libdm.h"
+#include "libdmdev.h"
 
 /*
  * Returns the total zone size. The zone size is the lowest possible amount of

@@ -5,7 +5,7 @@
  * Author: Niklas Neronin <niklas.neronin@gmail.com>
  */
 
-#include "libdm.h"
+#include "libdmdev.h"
 
 /*
  * Move the data to another block.

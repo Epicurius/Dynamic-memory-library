@@ -5,7 +5,7 @@
  * Author: Niklas Neronin <niklas.neronin@gmail.com>
  */
 
-#include "libdm.h"
+#include "libdmdev.h"
 
 /*
  *	Loop through all the same type zones and there blocks until

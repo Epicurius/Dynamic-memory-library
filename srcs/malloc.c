@@ -5,7 +5,7 @@
  * Author: Niklas Neronin <niklas.neronin@gmail.com>
  */
 
-#include "libdm.h"
+#include "libdmdev.h"
 
 struct libdm g_libdm =
 {

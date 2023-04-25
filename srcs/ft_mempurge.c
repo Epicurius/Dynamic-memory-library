@@ -5,7 +5,7 @@
  * Author: Niklas Neronin <niklas.neronin@gmail.com>
  */
 
-#include "libdm.h"
+#include "libdmdev.h"
 
 /*
  * Release all zone of type 'type'.
