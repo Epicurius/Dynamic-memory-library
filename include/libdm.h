@@ -115,4 +115,13 @@ t_zone	*allocate_zone(t_zone **head, size_t size);
 size_t  get_zone_size(size_t size);
 enum zone_type get_zone_type(size_t size);
 
+size_t  get_alloc_size(void *ptr);
+size_t  get_block_max(int type);
+t_block *split_block(t_block *block, size_t size);
+t_block *shrink_block(t_block *block, size_t size);
+t_block *downscale_block(t_block *block, size_t size, size_t min);
+t_block *combine_block(t_block *block, size_t size);
+t_block *grow_block(t_block *block, size_t size);
+t_block *upscale_block(t_block *block, size_t size, size_t min, size_t max);
+
 #endif
