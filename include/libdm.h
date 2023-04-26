@@ -110,7 +110,6 @@ void	ft_mempurge(void);
 /* Private functions */
 void	*_malloc(size_t size);
 void	_free(void *ptr);
-void	resize_block(t_block *block, size_t size);
 t_zone	*new_zone(t_zone **head, size_t size);
 size_t  get_zone_size(size_t size);
 enum zone_type get_zone_type(size_t size);
@@ -123,5 +122,6 @@ t_block *downscale_block(t_block *block, size_t size, size_t min);
 t_block *combine_block(t_block *block, size_t size);
 t_block *grow_block(t_block *block, size_t size);
 t_block *upscale_block(t_block *block, size_t size, size_t min, size_t max);
+t_block *resize_block(t_block *block, size_t size);
 
 #endif

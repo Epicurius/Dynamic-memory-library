@@ -158,3 +158,22 @@ t_block *upscale_block(t_block *block, size_t size, size_t min, size_t max)
 	}
 	return NULL;
 }
+
+/*
+ * Try resizing the block, on success returns the block, else returns 'NULL'.
+ */
+t_block *resize_block(t_block *block, size_t size)
+{
+	if (block->size == size)
+		return block;
+
+	int type = get_zone_type(block->size);
+	if (type == MEM_LARGE)
+		return NULL;
+
+	int min = get_block_max(type - 1);
+	if (size > block->size) {
+		return upscale_block(block, size, min, get_block_max(type));
+	}
+	return downscale_block(block, size, min);
+}

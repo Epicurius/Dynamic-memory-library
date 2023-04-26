@@ -35,61 +35,6 @@ enum zone_type get_zone_type(size_t size)
 }
 
 /*
- * Updated the next block. Next block might refer to the current block, if it
- * is split into two blocks.
- *
- * This function covers these scenarios:
- * 1. No next block, create one.
- * 2. Next block is free.
- *    2.1. Combine current block left overs into next block.
- *    2.2. No left overs use entire block.
- * 3. Current block is to large and can be split into two blocks.
- * 4. Fallback, nothing changes. Happens when current block is the exact size
- *    or there is no room to split the block.
- */
-void resize_block(t_block *block, size_t size)
-{
-	t_block	*next = (void *)block + sizeof(t_block) + size;
-
-	if (!block->next) {
-		next->next = NULL;
-		next->size = block->size - sizeof(t_block) - size;
-		next->free = TRUE;
-
-		block->size = size;
-		block->next = next;
-	}
-	else if (block->next->free == TRUE) {
-		if (next != block->next) {
-			/*
-			 * Move the next block 't_block' data into the leftover space in the
-			 * current block. The two blocks might overlap, so we use temporary
-			 * variables.
-			 */
-			size_t temp_size = block->next->size;
-			t_block *temp_next = block->next->next;
-
-			next->size = block->size - size + temp_size;
-			next->next = temp_next;
-			next->free = TRUE;
-		}
-
-		block->size = size;
-		block->next = next;
-	}
-	else if (((void *)next + sizeof(t_block)) < (void *)block->next) {
-		next->next = block->next;
-		next->size = (void *)block->next - ((void *)next + sizeof(t_block));
-		next->free = TRUE;
-
-		block->size = size;
-		block->next = next;
-	}
-	else /* Assume the block is the correct size. */
-		block->size = size;
-}
-
-/*
  * Allocate new zone with one free block.
  */
 static t_zone *allocate_zone(size_t size)
