@@ -24,19 +24,15 @@ static void *move_data(void *ptr, size_t size)
 }
 
 /*
- *	If no pointer give malloc size and return it. (same as malloc(size)).
- *	Check with find_block_and_zone() to find the correct zone and block.
- *	If: size 0 free.
- *	else if: new size is less or same, free the overflow.
- *	else if: new size is more malloc copy memory and free old.
+ * Attempts to resize the memory block pointed to by 'ptr'.
  */
-void	*realloc(void *ptr, size_t size)
+void *realloc(void *ptr, size_t size)
 {
 	void	*new;
-	t_block	*block;
+	t_block *block;
 
 	if (!ptr)
-		return (malloc(size));
+		return malloc(size);
 
 	new = NULL;
 	pthread_mutex_lock(&g_alloc.mutex);
@@ -50,5 +46,5 @@ void	*realloc(void *ptr, size_t size)
 			new = (void *)block + sizeof(t_block);
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
-	return (new);
+	return new;
 }
