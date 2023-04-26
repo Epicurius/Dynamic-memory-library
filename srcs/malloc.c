@@ -65,11 +65,11 @@ void *_malloc(size_t size)
 	if (size <= MEM_SMALL_MAX)
 		return get_free_block(MEM_SMALL, MEM_SMALL_MAX, size);
 
-	void *zone = allocate_zone(&g_alloc.zone[MEM_LARGE],
-							   sizeof(t_zone) + sizeof(t_block) + size);
+	t_zone *zone = allocate_zone(&g_alloc.zone[MEM_LARGE],
+							     sizeof(t_zone) + sizeof(t_block) + size);
 	if (!zone)
 		return NULL;
-	((t_block *)(zone + sizeof(t_zone)))->free = FALSE;
+	((t_block *)((void *)zone + sizeof(t_zone)))->free = FALSE;
 	return zone + sizeof(t_zone) + sizeof(t_block);
 }
 
