@@ -18,10 +18,10 @@
 # include <string.h>
 
 # define MEM_TINY_MAX    128
-# define MEM_TINY_ZONE   16384
 # define MEM_SMALL_MAX   1024
-# define MEM_SMALL_ZONE  106496
 # define BYTES_PER_ROW   20
+# define BLOCKS_PER_ZONE 100
+# define PAGE_SIZE       getpagesize()
 
 # define TRUE            1
 # define FALSE           0
@@ -112,5 +112,6 @@ void	*_malloc(size_t size);
 void	_free(void *ptr);
 void	resize_block(t_block *block, size_t size);
 void	*allocate_zone(t_zone **head, size_t size);
+size_t  get_zone_size(size_t size);
 
 #endif

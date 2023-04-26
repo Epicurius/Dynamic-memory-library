@@ -8,6 +8,21 @@
 #include "libdm.h"
 
 /*
+ * Returns the total zone size. The zone size is the lowest possible amount of
+ * 'PAGE_SIZE' that can fit 'BLOCKS_PER_ZONE' amount of blocks.
+ */
+size_t get_zone_size(size_t size)
+{
+	size_t block = sizeof(t_block) + size;
+	size_t zone = sizeof(t_zone) + block * BLOCKS_PER_ZONE;
+	size_t page = PAGE_SIZE;
+	size_t extra = (zone % page);
+	if (extra == 0)
+		return zone;
+	return zone + page - extra;
+}
+
+/*
  * Updated the next block. Next block might refer to the current block, if it
  * is split into two blocks.
  *

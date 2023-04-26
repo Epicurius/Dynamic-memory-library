@@ -39,7 +39,7 @@ static void	*find_space(t_zone *zone, size_t size)
 /*
  * Returns a pointer to user memory after finding and reserving a block.
  */
-static void *get_free_block(enum zone_type type, size_t total, size_t size)
+static void *get_free_block(enum zone_type type, size_t max, size_t size)
 {
 	void	*mem;
 	t_zone	*zone;
@@ -47,7 +47,7 @@ static void *get_free_block(enum zone_type type, size_t total, size_t size)
 	mem = find_space(g_alloc.zone[type], size);
 	if (mem)
 		return mem;
-	zone = allocate_zone(&g_alloc.zone[type], total);
+	zone = allocate_zone(&g_alloc.zone[type], get_zone_size(max));
 	if (!zone)
 		return NULL;
 	mem = find_space(g_alloc.zone[type], size);
@@ -60,10 +60,10 @@ static void *get_free_block(enum zone_type type, size_t total, size_t size)
 void *_malloc(size_t size)
 {
 	if (size <= MEM_TINY_MAX)
-		return get_free_block(MEM_TINY, MEM_TINY_ZONE, size);
+		return get_free_block(MEM_TINY, MEM_TINY_MAX, size);
 
 	if (size <= MEM_SMALL_MAX)
-		return get_free_block(MEM_SMALL, MEM_SMALL_ZONE, size);
+		return get_free_block(MEM_SMALL, MEM_SMALL_MAX, size);
 
 	void *zone = allocate_zone(&g_alloc.zone[MEM_LARGE],
 							   sizeof(t_zone) + sizeof(t_block) + size);
