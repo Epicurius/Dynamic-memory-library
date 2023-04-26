@@ -23,6 +23,18 @@ size_t get_zone_size(size_t size)
 }
 
 /*
+ * Returns the total zone size depending on the 'size' of a block.
+ */
+enum zone_type get_zone_type(size_t size)
+{
+	if (size <= MEM_TINY_MAX)
+		return MEM_TINY;
+	if (size <= MEM_SMALL_MAX)
+		return MEM_SMALL;
+	return MEM_LARGE;
+}
+
+/*
  * Updated the next block. Next block might refer to the current block, if it
  * is split into two blocks.
  *

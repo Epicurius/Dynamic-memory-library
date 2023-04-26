@@ -113,5 +113,6 @@ void	_free(void *ptr);
 void	resize_block(t_block *block, size_t size);
 void	*allocate_zone(t_zone **head, size_t size);
 size_t  get_zone_size(size_t size);
+enum zone_type get_zone_type(size_t size);
 
 #endif
