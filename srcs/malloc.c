@@ -14,19 +14,28 @@ t_alloc	g_alloc =
 };
 
 /*
- * Searches through the zone 'zone' for a block that has minimum 'size' amount
+ * Searches through the zone 'zone' for a block that has minimum 'min' amount
  * of available space. Returns the block if found, else returns 'NULL'.
  */
-static t_block *find_block(t_zone *zone, size_t size)
+static t_block *find_block(t_zone *zone, size_t size, size_t min)
 {
 	t_block	*block;
 
 	block = (void *)zone + sizeof(t_zone);
 	while (block) {
-		if (block->free == TRUE && size <= block->size) {
-			block->free = FALSE;
-			resize_block(block, size);
-			return block;
+		if (block->free == TRUE) {
+			if (size == block->size) {
+				/* Block is the same size */
+				block->free = FALSE;
+				return block;
+			}
+
+			if (size < block->size && block->size - size >= min) {
+				/* Block can be split into 2 blocks */
+				split_block(block, size);
+				block->free = FALSE;
+				return block;
+			}
 		}
 		block = block->next;
 	}
@@ -37,13 +46,15 @@ static t_block *find_block(t_zone *zone, size_t size)
  * Iterates through 'type' zones 'zone' searching for an available block.
  * Returns the block if found, else creates a new zone and block and returns it.
  */
-static t_block *get_free_block(enum zone_type type, size_t max, size_t size)
+static t_block *get_free_block(enum zone_type type, size_t min, size_t max,
+							   size_t size)
 {
 	t_zone	*zone = g_alloc.zone[type];
-	t_block	*block;
+	t_block *block;
 
+	min += sizeof(t_block);
 	while (zone) {
-		if ((block = find_block(zone, size)))
+		if ((block = find_block(zone, size, min)))
 			return block;
 		zone = zone->next;
 	}
@@ -52,7 +63,10 @@ static t_block *get_free_block(enum zone_type type, size_t max, size_t size)
 	if (!zone)
 		return NULL;
 
-	return find_block(zone, size);
+	block = (void *)zone + sizeof(t_zone);
+	split_block(block, size);
+	block->free = FALSE;
+	return block;
 }
 
 /*
@@ -82,9 +96,9 @@ void *_malloc(size_t size)
 	t_block *block;
 
 	if (size <= MEM_TINY_MAX)
-		block = get_free_block(MEM_TINY, MEM_TINY_MAX, size);
+		block = get_free_block(MEM_TINY, 0, MEM_TINY_MAX, size);
 	else if (size <= MEM_SMALL_MAX)
-		block = get_free_block(MEM_SMALL, MEM_SMALL_MAX, size);
+		block = get_free_block(MEM_SMALL, MEM_TINY_MAX, MEM_SMALL_MAX, size);
 	else
 		block = create_large_block(size);
 
@@ -100,7 +114,7 @@ void *malloc(size_t size)
 {
 	void *mem;
 
-	if (size <= 0)
+	if (!size)
 		return NULL;
 
 	pthread_mutex_lock(&g_alloc.mutex);
