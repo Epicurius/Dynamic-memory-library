@@ -13,8 +13,8 @@
  */
 size_t get_zone_size(size_t size)
 {
-	size_t block = sizeof(t_block) + size;
-	size_t zone = sizeof(t_zone) + block * BLOCKS_PER_ZONE;
+	size_t block = sizeof(struct block) + size;
+	size_t zone = sizeof(struct zone) + block * BLOCKS_PER_ZONE;
 	size_t page = PAGE_SIZE;
 	size_t extra = (zone % page);
 	if (extra == 0)
@@ -37,10 +37,10 @@ enum zone_type get_zone_type(size_t size)
 /*
  * Allocate new zone with one free block.
  */
-static t_zone *allocate_zone(size_t size)
+static struct zone *allocate_zone(size_t size)
 {
-	t_zone		*zone;
-	t_block		*block;
+	struct zone *zone;
+	struct block *block;
 
 	zone = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON,
 				-1, 0);
@@ -49,19 +49,19 @@ static t_zone *allocate_zone(size_t size)
 	zone->next = NULL;
 	zone->end = (void *)zone + size;
 
-	block = (void *)zone + sizeof(t_zone);
+	block = (void *)zone + sizeof(struct zone);
 	block->next = NULL;
 	block->free = TRUE;
-	block->size = size - sizeof(t_zone) - sizeof(t_block);
+	block->size = size - sizeof(struct zone) - sizeof(struct block);
 	return zone;
 }
 
 /*
  * Return a new initialized zone.
  */
-t_zone *new_zone(t_zone **head, size_t size)
+struct zone *new_zone(struct zone **head, size_t size)
 {
-	t_zone *zone;
+	struct zone *zone;
 
 	zone = allocate_zone(size);
 	if (!head || !zone)

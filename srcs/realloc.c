@@ -16,7 +16,7 @@ static void *move_data(void *ptr, size_t size)
 
 	new = _malloc(size);
 	if (new) {
-		t_block *block = ptr - sizeof(t_block);
+		struct block *block = ptr - sizeof(struct block);
 		memcpy(new, ptr, block->size < size ? block->size : size);
 		_free(ptr);
 	}
@@ -28,23 +28,23 @@ static void *move_data(void *ptr, size_t size)
  */
 void *realloc(void *ptr, size_t size)
 {
-	void	*new;
-	t_block *block;
+	void *new;
+	struct block *block;
 
 	if (!ptr)
 		return malloc(size);
 
 	new = NULL;
-	pthread_mutex_lock(&g_alloc.mutex);
+	pthread_mutex_lock(&g_libdm.mutex);
 	if (!size)
 		_free(ptr);
 	else {
-		block = resize_block(ptr - sizeof(t_block), size);
+		block = resize_block(ptr - sizeof(struct block), size);
 		if (!block)
 			new = move_data(ptr, size);
 		else
-			new = (void *)block + sizeof(t_block);
+			new = (void *)block + sizeof(struct block);
 	}
-	pthread_mutex_unlock(&g_alloc.mutex);
+	pthread_mutex_unlock(&g_libdm.mutex);
 	return new;
 }

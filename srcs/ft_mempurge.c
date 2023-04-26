@@ -12,16 +12,16 @@
  */
 static void release_zones(enum zone_type type)
 {
-	t_zone *zone;
-	t_zone *curr;
+	struct zone *zone;
+	struct zone *curr;
 
-	zone = g_alloc.zone[type];
+	zone = g_libdm.zone[type];
 	while (zone) {
 		curr = zone;
 		zone = zone->next;
 		munmap(curr, (void *)curr->end - (void *)curr);
 	}
-	g_alloc.zone[type] = NULL;
+	g_libdm.zone[type] = NULL;
 }
 
 /*
@@ -29,9 +29,9 @@ static void release_zones(enum zone_type type)
  */
 void ft_mempurge(void)
 {
-	pthread_mutex_lock(&g_alloc.mutex);
+	pthread_mutex_lock(&g_libdm.mutex);
 	release_zones(MEM_TINY);
 	release_zones(MEM_SMALL);
 	release_zones(MEM_LARGE);
-	pthread_mutex_unlock(&g_alloc.mutex);
+	pthread_mutex_unlock(&g_libdm.mutex);
 }

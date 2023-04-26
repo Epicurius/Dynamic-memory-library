@@ -111,7 +111,7 @@ static void show_hex(const unsigned char *data, size_t size)
 	}
 }
 
-static void	print_blocks(t_block *block, int flags)
+static void	print_blocks(struct block *block, int flags)
 {
 	int	num, i;
 
@@ -119,12 +119,13 @@ static void	print_blocks(t_block *block, int flags)
 	while (block) {
 		if (!block->free || (block->free && flags & MEM_SHOW_FREE)) {
 			i = sprintf(buffer, "\t- BLOCK %d: %p - %p : %lu bytes", num++,
-						(void *)block + sizeof(t_block),
-						(void *)block + sizeof(t_block) + block->size,
+						(void *)block + sizeof(struct block),
+						(void *)block + sizeof(struct block) + block->size,
 						block->size);
 
 			if (flags & MEM_SHOW_HASH && block->free == FALSE)
-				i += sprintf(&buffer[i], " \x1b[38;5;118m[%.4s]\x1b[0m", block->str);
+				i += sprintf(&buffer[i], " \x1b[38;5;118m[%.4s]\x1b[0m",
+							 block->str);
 
 			if (block->free) {
 				memcpy(&buffer[i], " \x1b[32mFREE\x1b[0m\n", 15);
@@ -137,15 +138,15 @@ static void	print_blocks(t_block *block, int flags)
 			write(fd, buffer, i);
 
 			if (flags & MEM_SHOW_CHAR && block->free == FALSE)
-				show_char((void *)block + sizeof(t_block), block->size);
+				show_char((void *)block + sizeof(struct block), block->size);
 			else if (flags & MEM_SHOW_HEX && block->free == FALSE)
-				show_hex((void *)block + sizeof(t_block), block->size);
+				show_hex((void *)block + sizeof(struct block), block->size);
 		}
 		block = block->next;
 	}
 }
 
-static void print_zones(t_zone *zone, int flags)
+static void print_zones(struct zone *zone, int flags)
 {
 	int	i, num;
 
@@ -155,7 +156,7 @@ static void print_zones(t_zone *zone, int flags)
 					(zone->end - (void *)zone));
 		write(fd, buffer, i);
 
-		print_blocks((void *)zone + sizeof(t_zone), flags);
+		print_blocks((void *)zone + sizeof(struct zone), flags);
 		zone = zone->next;
 	}
 }
@@ -173,26 +174,26 @@ void ft_memshow(int fd, int flags)
 	if (!(flags & (MEM_SHOW_TINY | MEM_SHOW_SMALL | MEM_SHOW_LARGE)))
 		flags |= MEM_SHOW_TINY | MEM_SHOW_SMALL | MEM_SHOW_LARGE;
 
-	pthread_mutex_lock(&g_alloc.mutex);
-	if (flags & MEM_SHOW_TINY && g_alloc.zone[MEM_TINY]) {
+	pthread_mutex_lock(&g_libdm.mutex);
+	if (flags & MEM_SHOW_TINY && g_libdm.zone[MEM_TINY]) {
 		write(fd, buffer, sprintf(buffer, "\x1b[38;5;41mTINY\x1b[0m   : %p\n",
-								  g_alloc.zone[MEM_TINY]));
+								  g_libdm.zone[MEM_TINY]));
 
-		print_zones(g_alloc.zone[MEM_TINY], flags);
+		print_zones(g_libdm.zone[MEM_TINY], flags);
 	}
-	if (flags & MEM_SHOW_SMALL && g_alloc.zone[MEM_SMALL]) {
+	if (flags & MEM_SHOW_SMALL && g_libdm.zone[MEM_SMALL]) {
 		write(fd, buffer, sprintf(buffer, "\x1b[38;5;51mSMALL\x1b[0m  : %p\n",
-								  g_alloc.zone[MEM_SMALL]));
+								  g_libdm.zone[MEM_SMALL]));
 
-		print_zones(g_alloc.zone[MEM_SMALL], flags);
+		print_zones(g_libdm.zone[MEM_SMALL], flags);
 	}
-	if (flags & MEM_SHOW_LARGE && g_alloc.zone[MEM_LARGE]) {
+	if (flags & MEM_SHOW_LARGE && g_libdm.zone[MEM_LARGE]) {
 		write(fd, buffer, sprintf(buffer, "\x1b[38;5;61mLARGE\x1b[0m  : %p\n",
-								  g_alloc.zone[MEM_LARGE]));
+								  g_libdm.zone[MEM_LARGE]));
 
-		print_zones(g_alloc.zone[MEM_LARGE], flags);
+		print_zones(g_libdm.zone[MEM_LARGE], flags);
 	}
-	pthread_mutex_unlock(&g_alloc.mutex);
+	pthread_mutex_unlock(&g_libdm.mutex);
 
 	if (munmap(buffer, size))
 		ERROR("'munmap()' failed to free buffer in 'ft_memshow()'");

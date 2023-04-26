@@ -11,15 +11,15 @@
  *	Loop through all the same type zones and there blocks until
  *	the block with the same hash is found.
  */
-static void	*find_block(t_zone *zone, char *hash)
+static void *find_block(struct zone *zone, char *hash)
 {
-	t_block	*block;
+	struct block *block;
 
 	while (zone) {
-		block = (void *)zone + sizeof(t_zone);
+		block = (void *)zone + sizeof(struct zone);
 		while (block) {
 			if (strcmp(block->str, hash) == 0)
-				return (void *)block + sizeof(t_block);
+				return (void *)block + sizeof(struct block);
 			block = block->next;
 		}
 		zone = zone->next;
@@ -30,19 +30,19 @@ static void	*find_block(t_zone *zone, char *hash)
 /*
  *	Find pointer to memory with hash.
  */
-void	*ft_memfind(char *hash)
+void *ft_memfind(char *hash)
 {
-	void	*ptr;
+	void *ptr;
 
 	if (!hash)
 		return NULL;
 
 	ptr = NULL;
-	pthread_mutex_lock(&g_alloc.mutex);
+	pthread_mutex_lock(&g_libdm.mutex);
 	for (int i = MEM_TINY; i <= MEM_LARGE; i++) {
-		if ((ptr = find_block(g_alloc.zone[i], hash)))
+		if ((ptr = find_block(g_libdm.zone[i], hash)))
 			break ;
 	}
-	pthread_mutex_unlock(&g_alloc.mutex);
+	pthread_mutex_unlock(&g_libdm.mutex);
 	return ptr;
 }

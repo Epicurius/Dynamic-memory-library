@@ -19,11 +19,11 @@ void *calloc(size_t num, size_t size)
 	if (total <= 0)
 		return NULL;
 
-	pthread_mutex_lock(&g_alloc.mutex);
+	pthread_mutex_lock(&g_libdm.mutex);
 	mem = _malloc(total);
 	if (mem)
 		memset(mem, 0, total);
-	pthread_mutex_unlock(&g_alloc.mutex);
+	pthread_mutex_unlock(&g_libdm.mutex);
 
 	return mem;
 }

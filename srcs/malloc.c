@@ -7,7 +7,7 @@
 
 #include "libdm.h"
 
-t_alloc	g_alloc =
+struct libdm g_libdm =
 {
 	.zone = {NULL, NULL, NULL},
 	.mutex = PTHREAD_MUTEX_INITIALIZER
@@ -17,11 +17,11 @@ t_alloc	g_alloc =
  * Searches through the zone 'zone' for a block that has minimum 'min' amount
  * of available space. Returns the block if found, else returns 'NULL'.
  */
-static t_block *find_block(t_zone *zone, size_t size, size_t min)
+static struct block *find_block(struct zone *zone, size_t size, size_t min)
 {
-	t_block	*block;
+	struct block *block;
 
-	block = (void *)zone + sizeof(t_zone);
+	block = (void *)zone + sizeof(struct zone);
 	while (block) {
 		if (block->free == TRUE) {
 			if (size == block->size) {
@@ -46,24 +46,24 @@ static t_block *find_block(t_zone *zone, size_t size, size_t min)
  * Iterates through 'type' zones 'zone' searching for an available block.
  * Returns the block if found, else creates a new zone and block and returns it.
  */
-static t_block *get_free_block(enum zone_type type, size_t min, size_t max,
-							   size_t size)
+static struct block *get_free_block(enum zone_type type, size_t min, size_t max,
+									size_t size)
 {
-	t_zone	*zone = g_alloc.zone[type];
-	t_block *block;
+	struct zone	*zone = g_libdm.zone[type];
+	struct block *block;
 
-	min += sizeof(t_block);
+	min += sizeof(struct block);
 	while (zone) {
 		if ((block = find_block(zone, size, min)))
 			return block;
 		zone = zone->next;
 	}
 
-	zone = new_zone(&g_alloc.zone[type], get_zone_size(max));
+	zone = new_zone(&g_libdm.zone[type], get_zone_size(max));
 	if (!zone)
 		return NULL;
 
-	block = (void *)zone + sizeof(t_zone);
+	block = (void *)zone + sizeof(struct zone);
 	split_block(block, size);
 	block->free = FALSE;
 	return block;
@@ -72,18 +72,18 @@ static t_block *get_free_block(enum zone_type type, size_t min, size_t max,
 /*
  * Creates a zone with 1 reserved block. This function is 'MEM_LARGE' specific.
  */
-static t_block *create_large_block(size_t size)
+static struct block *create_large_block(size_t size)
 {
-	t_zone  *zone;
-	size_t  zone_size;
-	t_block *block;
+	size_t zone_size;
+	struct zone *zone;
+	struct block *block;
 
-	zone_size = sizeof(t_zone) + sizeof(t_block) + size;
-	zone = new_zone(&g_alloc.zone[MEM_LARGE], zone_size);
+	zone_size = sizeof(struct zone) + sizeof(struct block) + size;
+	zone = new_zone(&g_libdm.zone[MEM_LARGE], zone_size);
 	if (!zone)
 		return NULL;
 
-	block = (void *)zone + sizeof(t_zone);
+	block = (void *)zone + sizeof(struct zone);
 	block->free = FALSE;
 	return block;
 }
@@ -93,7 +93,7 @@ static t_block *create_large_block(size_t size)
  */
 void *_malloc(size_t size)
 {
-	t_block *block;
+	struct block *block;
 
 	if (size <= MEM_TINY_MAX)
 		block = get_free_block(MEM_TINY, 0, MEM_TINY_MAX, size);
@@ -102,9 +102,7 @@ void *_malloc(size_t size)
 	else
 		block = create_large_block(size);
 
-	if (!block)
-		return NULL;
-	return (void *)block + sizeof(t_block);
+	return (void *)block + sizeof(struct block);
 }
 
 /*
@@ -117,8 +115,8 @@ void *malloc(size_t size)
 	if (!size)
 		return NULL;
 
-	pthread_mutex_lock(&g_alloc.mutex);
+	pthread_mutex_lock(&g_libdm.mutex);
 	mem = _malloc(size);
-	pthread_mutex_unlock(&g_alloc.mutex);
+	pthread_mutex_unlock(&g_libdm.mutex);
 	return mem;
 }

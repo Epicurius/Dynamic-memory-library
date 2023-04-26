@@ -12,7 +12,7 @@
  */
 size_t get_alloc_size(void *ptr)
 {
-	return ((t_block *)(ptr - sizeof(t_block)))->size;
+	return ((struct block *)(ptr - sizeof(struct block)))->size;
 }
 
 /*
@@ -33,13 +33,13 @@ size_t get_block_max(int type)
 /*
  * Splits block into 2 blocks and returns the first part.
  * Prerequisite:
- * - block->size - size >= sizeof(t_block) + MIN_SIZE
+ * - block->size - size >= sizeof(struct block) + MIN_SIZE
  */
-t_block *split_block(t_block *block, size_t size)
+struct block *split_block(struct block *block, size_t size)
 {
-	t_block *next = (void *)block + sizeof(t_block) + size;
+	struct block *next = (void *)block + sizeof(struct block) + size;
 
-	next->size = block->size - size - sizeof(t_block);
+	next->size = block->size - size - sizeof(struct block);
 	next->next = block->next;
 	next->free = TRUE;
 
@@ -55,13 +55,13 @@ t_block *split_block(t_block *block, size_t size)
  * - block->next->free == TRUE
  * - size > MIN_SIZE && size <= MAX_SIZE
  */
-t_block *shrink_block(t_block *block, size_t size)
+struct block *shrink_block(struct block *block, size_t size)
 {
-	t_block tmp;
+	struct block tmp;
 	tmp.size = block->next->size;
 	tmp.next = block->next->next;
 
-	t_block *next = (void *)block + sizeof(t_block) + size;
+	struct block *next = (void *)block + sizeof(struct block) + size;
 	next->size = tmp.size + block->size - size ;
 	next->next = tmp.next;
 	next->free = TRUE;
@@ -74,7 +74,7 @@ t_block *shrink_block(t_block *block, size_t size)
 /*
  * Down scale the block.
  */
-t_block *downscale_block(t_block *block, size_t size, size_t min)
+struct block *downscale_block(struct block *block, size_t size, size_t min)
 {
 	if (size <= min)
 		return NULL;
@@ -84,7 +84,7 @@ t_block *downscale_block(t_block *block, size_t size, size_t min)
 		return shrink_block(block, size);
 	}
 
-	if (block->size - size >= sizeof(t_block) + min) {
+	if (block->size - size >= sizeof(struct block) + min) {
 		/* Try spliting current block into 2 blocks */
 		return split_block(block, size);
 	}
@@ -98,7 +98,7 @@ t_block *downscale_block(t_block *block, size_t size, size_t min)
  * - block->next
  * - block->next->free == TRUE
  */
-t_block *combine_block(t_block *block, size_t size)
+struct block *combine_block(struct block *block, size_t size)
 {
 	block->size = size;
 	block->next = block->next->next;
@@ -112,9 +112,9 @@ t_block *combine_block(t_block *block, size_t size)
  * - block->next->free == TRUE
  * - block->size + block->next->size - size >= MIN_SIZE
  */
-t_block *grow_block(t_block *block, size_t size)
+struct block *grow_block(struct block *block, size_t size)
 {
-	t_block *next = (void *)block + sizeof(t_block) + size;
+	struct block *next = (void *)block + sizeof(struct block) + size;
 
 	next->size = block->size + block->next->size - size;
 	next->next = block->next->next;
@@ -128,7 +128,8 @@ t_block *grow_block(t_block *block, size_t size)
 /*
  * Up scale the block.
  */
-t_block *upscale_block(t_block *block, size_t size, size_t min, size_t max)
+struct block *upscale_block(struct block *block, size_t size, size_t min,
+							size_t max)
 {
 	if (size > max)
 		return NULL;
@@ -139,14 +140,15 @@ t_block *upscale_block(t_block *block, size_t size, size_t min, size_t max)
 	}
 
 	if (block->next->free == TRUE) {
-		size_t comb_size = block->size + sizeof(t_block) + block->next->size;
+		size_t comb_size = block->size + sizeof(struct block) + \
+						   block->next->size;
 
 		if (comb_size < size) {
 			/* Both block combined don't have enough space */
 			return NULL;
 		}
 
-		if (comb_size - size >= sizeof(t_block) + min) {
+		if (comb_size - size >= sizeof(struct block) + min) {
 			/* Grow over the next block */
 			return grow_block(block, size);
 		}
@@ -162,7 +164,7 @@ t_block *upscale_block(t_block *block, size_t size, size_t min, size_t max)
 /*
  * Try resizing the block, on success returns the block, else returns 'NULL'.
  */
-t_block *resize_block(t_block *block, size_t size)
+struct block *resize_block(struct block *block, size_t size)
 {
 	if (block->size == size)
 		return block;

@@ -7,7 +7,7 @@
 
 #include "libdm.h"
 
-void	copy_malloc_hash(t_block *block, char *hash)
+void	copy_malloc_hash(struct block *block, char *hash)
 {
 	int	i;
 	int	len;
@@ -26,15 +26,15 @@ void	*ft_malloc(size_t size, char *hash)
 	if (size <= 0)
 		return NULL;
 
-	pthread_mutex_lock(&g_alloc.mutex);
+	pthread_mutex_lock(&g_libdm.mutex);
 	mem = _malloc(size);
 	if (mem) {
 		memset(mem, 0, size);
 
 		if (hash)
-			copy_malloc_hash((void *)mem - sizeof(t_block), hash);
+			copy_malloc_hash((void *)mem - sizeof(struct block), hash);
 	}
-	pthread_mutex_unlock(&g_alloc.mutex);
+	pthread_mutex_unlock(&g_libdm.mutex);
 
 	if (!mem)
 		ERROR("'ft_malloc()' failed allocating memory");

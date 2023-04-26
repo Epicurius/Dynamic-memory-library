@@ -11,16 +11,16 @@
  * Set 'curr' block to free and merge any adjacent free blocks into one free
  * block.
  */
-static void	free_block(t_block *curr, t_block *prev)
+static void	free_block(struct block *curr, struct block *prev)
 {
 	curr->free = TRUE;
 
 	if (curr->next && curr->next->free == TRUE) {
-		curr->size += sizeof(t_block) + curr->next->size;
+		curr->size += sizeof(struct block) + curr->next->size;
 		curr->next = curr->next->next;
 	}
 	if (prev && prev->free == TRUE) {
-		prev->size += sizeof(t_block) + curr->size;
+		prev->size += sizeof(struct block) + curr->size;
 		prev->next = curr->next;
 	}
 }
@@ -28,12 +28,12 @@ static void	free_block(t_block *curr, t_block *prev)
 /*
  * Release allocated memory and relink the previous zone.
  */
-static void free_zone(enum zone_type type, t_zone *zone, t_zone *prev)
+static void free_zone(enum zone_type type, struct zone *zone, struct zone *prev)
 {
 	if (prev)
 		prev->next = zone->next;
 	else
-		g_alloc.zone[type] = zone->next;
+		g_libdm.zone[type] = zone->next;
 
 	if (munmap(zone, (size_t)(zone->end - (void *)zone)) == -1)
 		ERROR("freeing zone type '%d' failed", type);
@@ -43,7 +43,7 @@ static void free_zone(enum zone_type type, t_zone *zone, t_zone *prev)
  * This function checks the remaining blocks and return whether all block are
  * free.
  */
-static int is_rest_free(t_block *block)
+static int is_rest_free(struct block *block)
 {
 	while (block) {
 		if (block->free == FALSE)
@@ -58,14 +58,14 @@ static int is_rest_free(t_block *block)
  */
 void _free(void *ptr)
 {
-	t_block *block = ptr - sizeof(t_block);
+	struct block *block = ptr - sizeof(struct block);
 	enum zone_type type = get_zone_type(block->size);
 
 	if (block->free == TRUE)
 		ERROR("pointer being freed was not allocated");
 
-	t_zone *curr_zone = g_alloc.zone[type];
-	t_zone *prev_zone = NULL;
+	struct zone *curr_zone = g_libdm.zone[type];
+	struct zone *prev_zone = NULL;
 
 	while (curr_zone) {
 		if ((void *)block < (void *)curr_zone ||
@@ -81,8 +81,8 @@ void _free(void *ptr)
 			return ;
 		}
 
-		t_block *curr_block = (void *)curr_zone + sizeof(t_zone);
-		t_block *prev_block = NULL;
+		struct block *curr_block = (void *)curr_zone + sizeof(struct zone);
+		struct block *prev_block = NULL;
 
 		unsigned char zone_free = TRUE;
 		while (curr_block) {
@@ -117,7 +117,7 @@ void free(void *ptr)
 	if (!ptr)
 		return ;
 
-	pthread_mutex_lock(&g_alloc.mutex);
+	pthread_mutex_lock(&g_libdm.mutex);
 	_free(ptr);
-	pthread_mutex_unlock(&g_alloc.mutex);
+	pthread_mutex_unlock(&g_libdm.mutex);
 }
