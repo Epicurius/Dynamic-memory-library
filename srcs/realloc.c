@@ -46,6 +46,22 @@ static int	find_block_and_zone(void *ptr, t_block **block, t_zone **zone)
 }
 
 /*
+ * Move the data to another block.
+ */
+static void *move_data(void *ptr, size_t size)
+{
+	void *new;
+
+	new = _malloc(size);
+	if (new) {
+		t_block *block = ptr - sizeof(t_block);
+		memcpy(new, ptr, block->size < size ? block->size : size);
+		_free(ptr);
+	}
+	return new;
+}
+
+/*
  *	If no pointer give malloc size and return it. (same as malloc(size)).
  *	Check with find_block_and_zone() to find the correct zone and block.
  *	If: size 0 free.
@@ -71,11 +87,7 @@ void	*realloc(void *ptr, size_t size)
 			new = ptr;
 		}
 		else {
-			new = _malloc(size);
-			if (new) {
-				memcpy(new, ptr, block->size < size ? block->size : size);
-				_free(ptr);
-			}
+			new = move_data(ptr , size);
 		}
 	}
 	pthread_mutex_unlock(&g_alloc.mutex);
