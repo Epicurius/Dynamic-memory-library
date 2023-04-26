@@ -39,7 +39,7 @@
 	exit(1); \
 }
 
-enum	e_mem_zone
+enum zone_type
 {
 	MEM_TINY,
 	MEM_SMALL,

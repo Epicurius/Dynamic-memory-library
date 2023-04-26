@@ -7,7 +7,7 @@
 
 #include "libdm.h"
 
-static void	loop_zones(int type)
+static void	loop_zones(enum zone_type type)
 {
 	t_zone	*zone;
 	t_zone	*curr;

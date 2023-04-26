@@ -39,7 +39,7 @@ static void	*find_space(t_zone *zone, size_t size)
 /*
  * Returns a pointer to user memory after finding and reserving a block.
  */
-static void *get_free_block(int type, size_t total, size_t size)
+static void *get_free_block(enum zone_type type, size_t total, size_t size)
 {
 	void	*mem;
 	t_zone	*zone;
