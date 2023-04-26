@@ -17,16 +17,6 @@
 # include <stdio.h>
 # include <string.h>
 
-/*
- *	Hive x64
- *	printf("%lu %lu %d\n", sizeof(t_zone), sizeof(t_block), getpagesize());
- *		= 16 24 4096
- *	(128 + 24) * 100 + 16 = 15216  < 4096 * 4
- *	(1024 + 24) * 100 + 16 = 105616 < 4096 * 26
- *	The zone size must be larger.
- *	TODO: adjust zone sizes until optimal amount.
- *	Each zone must contain at least 100 allocations.
- */
 # define MEM_TINY_MAX    128
 # define MEM_TINY_ZONE   16384
 # define MEM_SMALL_MAX   1024
@@ -65,12 +55,11 @@ enum	e_mem_zone
 # define MEM_SHOW_HASH  0x01000000
 
 /*
- *	Size: 24 Bytes
- *	Address to the next block to the right.
- *	Is free or reserved.
- *	The amount of user data.
- *	User data + infrastructure data size.
- *	str = 14,950 will work on x32 system.
+ * Size: 24 Bytes
+ * 'next' - pointer to the next block.
+ * 'free' - free or reserved.
+ * 'str'  - user designated hash.
+ * 'size' - size of user allocated data.
  */
 typedef struct s_block
 {
@@ -81,9 +70,9 @@ typedef struct s_block
 }					t_block;
 
 /*
- *	Size: 16 Bytes
- *	Address to the next same type zone.
- *	Address to the end of current zone.
+ * Size: 16 Bytes
+ * 'next' - pointer to the next zone.
+ * 'end'  - pointer to zone end.
  */
 typedef struct s_zone
 {
@@ -91,6 +80,12 @@ typedef struct s_zone
 	void			*end;
 }					t_zone;
 
+/*
+ * Size: 16 Bytes
+ * 'zone'  - head for each zone type.
+ * 'mutex' - mutual exclusion object.
+ * 'debug' - debug message buffer.
+ */
 typedef struct s_alloc
 {
 	t_zone			*zone[3];
@@ -100,19 +95,22 @@ typedef struct s_alloc
 
 extern t_alloc		g_alloc;
 
+/* Public standard functions */
 void	*malloc(size_t size);
 void	*calloc(size_t num, size_t size);
 void	*realloc(void *ptr, size_t size);
 void	free(void *ptr);
 
-void	*_malloc(size_t size);
-void	_free(void *ptr);
-void	resize_block(t_block *block, size_t size);
-void	*allocate_zone(t_zone **head, size_t size);
-
+/* Public custom functions */
 void	ft_memshow(int fd, int flags);
 void	*ft_malloc(size_t size, char *code);
 void	*ft_memfind(char *hash);
 void	ft_mempurge(void);
+
+/* Private functions */
+void	*_malloc(size_t size);
+void	_free(void *ptr);
+void	resize_block(t_block *block, size_t size);
+void	*allocate_zone(t_zone **head, size_t size);
 
 #endif
