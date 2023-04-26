@@ -2,8 +2,7 @@
  * -*- coding: utf-8 -*-
  * vim: ts=4 sw=4 tw=80 et ai si
  *
- * Created: 08/12/2021 Niklas Neronin
- * Updated: 16/04/2023 Niklas Neronin
+ * Author: Niklas Neronin <niklas.neronin@gmail.com>
  */
 
 #ifndef LIBMEM_H

@@ -2,8 +2,7 @@
  * -*- coding: utf-8 -*-
  * vim: ts=4 sw=4 tw=80 et ai si
  *
- * Created: 13/08/2021 Niklas Neronin
- * Updated: 08/04/2023 Niklas Neronin
+ * Created: Niklas Neronin <niklas.neronin@gmail.com>
  */
 
 #include "libdm.h"
