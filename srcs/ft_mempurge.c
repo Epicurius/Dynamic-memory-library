@@ -7,10 +7,13 @@
 
 #include "libdm.h"
 
-static void	loop_zones(enum zone_type type)
+/*
+ * Release all zone of type 'type'.
+ */
+static void release_zones(enum zone_type type)
 {
-	t_zone	*zone;
-	t_zone	*curr;
+	t_zone *zone;
+	t_zone *curr;
 
 	zone = g_alloc.zone[type];
 	while (zone) {
@@ -21,11 +24,14 @@ static void	loop_zones(enum zone_type type)
 	g_alloc.zone[type] = NULL;
 }
 
-void	ft_mempurge(void)
+/*
+ * Release all allocated memory, in other words deallocate all zones.
+ */
+void ft_mempurge(void)
 {
 	pthread_mutex_lock(&g_alloc.mutex);
-	loop_zones(MEM_TINY);
-	loop_zones(MEM_SMALL);
-	loop_zones(MEM_LARGE);
+	release_zones(MEM_TINY);
+	release_zones(MEM_SMALL);
+	release_zones(MEM_LARGE);
 	pthread_mutex_unlock(&g_alloc.mutex);
 }
