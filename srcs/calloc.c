@@ -2,16 +2,15 @@
  * -*- coding: utf-8 -*-
  * vim: ts=4 sw=4 tw=80 et ai si
  *
- * Created: Niklas Neronin <niklas.neronin@gmail.com>
+ * Author: Niklas Neronin <niklas.neronin@gmail.com>
  */
 
 #include "libdm.h"
 
 /*
- *	Same as malloc except it sets all bytes to 0.
- *	More info in malloc.
+ * Same as 'malloc()' except it sets all bytes to 'NULL'.
  */
-void	*calloc(size_t num, size_t size)
+void *calloc(size_t num, size_t size)
 {
 	void	*mem;
 	size_t	total;
