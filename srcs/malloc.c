@@ -14,24 +14,21 @@ t_alloc	g_alloc =
 };
 
 /*
- *	Searches through all the blocks in the zone and returns one if
- *	its free and if the memory size is same or less.
+ * Searches through the zone 'zone' for a block that has minimum 'size' amount
+ * of available space. Returns the pointer if found, else returns 'NULL'.
  */
-static void	*find_space(t_zone *zone, size_t size)
+static void	*find_block(t_zone *zone, size_t size)
 {
 	t_block	*block;
 
-	while (zone) {
-		block = (void *)zone + sizeof(t_zone);
-		while (block) {
-			if (block->free == TRUE && size <= block->size) {
-				block->free = FALSE;
-				resize_block(block, size);
-				return ((void *)block + sizeof(t_block));
-			}
-			block = block->next;
+	block = (void *)zone + sizeof(t_zone);
+	while (block) {
+		if (block->free == TRUE && size <= block->size) {
+			block->free = FALSE;
+			resize_block(block, size);
+			return ((void *)block + sizeof(t_block));
 		}
-		zone = zone->next;
+		block = block->next;
 	}
 	return NULL;
 }
@@ -41,17 +38,20 @@ static void	*find_space(t_zone *zone, size_t size)
  */
 static void *get_free_block(enum zone_type type, size_t max, size_t size)
 {
+	t_zone	*zone = g_alloc.zone[type];
 	void	*mem;
-	t_zone	*zone;
 
-	mem = find_space(g_alloc.zone[type], size);
-	if (mem)
-		return mem;
+	while (zone) {
+		if ((mem = find_block(zone, size)))
+			return mem;
+		zone = zone->next;
+	}
+
 	zone = new_zone(&g_alloc.zone[type], get_zone_size(max));
 	if (!zone)
 		return NULL;
-	mem = find_space(g_alloc.zone[type], size);
-	return mem;
+
+	return find_block(zone, size);
 }
 
 /*
