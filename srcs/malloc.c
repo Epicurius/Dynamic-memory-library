@@ -55,6 +55,25 @@ static void *get_free_block(enum zone_type type, size_t max, size_t size)
 }
 
 /*
+ * Creates a zone with 1 reserved block. This function is 'MEM_LARGE' specific.
+ */
+static void *create_large_block(size_t size)
+{
+	t_zone  *zone;
+	size_t  zone_size;
+	t_block *block;
+
+	zone_size = sizeof(t_zone) + sizeof(t_block) + size;
+	zone = new_zone(&g_alloc.zone[MEM_LARGE], zone_size);
+	if (!zone)
+		return NULL;
+
+	block = (void *)zone + sizeof(t_zone);
+	block->free = FALSE;
+	return ((void *)block + sizeof(t_block));
+}
+
+/*
  * Private not thread safe 'malloc()'.
  */
 void *_malloc(size_t size)
@@ -65,12 +84,7 @@ void *_malloc(size_t size)
 	if (size <= MEM_SMALL_MAX)
 		return get_free_block(MEM_SMALL, MEM_SMALL_MAX, size);
 
-	t_zone *zone = new_zone(&g_alloc.zone[MEM_LARGE],
-							sizeof(t_zone) + sizeof(t_block) + size);
-	if (!zone)
-		return NULL;
-	((t_block *)((void *)zone + sizeof(t_zone)))->free = FALSE;
-	return zone + sizeof(t_zone) + sizeof(t_block);
+	return create_large_block(size);
 }
 
 /*
