@@ -90,9 +90,9 @@ void resize_block(t_block *block, size_t size)
 }
 
 /*
- *	Allocate new zone with one free block.
+ * Allocate new zone with one free block.
  */
-static t_zone *new_zone(size_t size)
+static t_zone *allocate_zone(size_t size)
 {
 	t_zone		*zone;
 	t_block		*block;
@@ -112,13 +112,13 @@ static t_zone *new_zone(size_t size)
 }
 
 /*
- * Allocate zone and add it the to list 'head'.
+ * Return a new initialized zone.
  */
-t_zone *allocate_zone(t_zone **head, size_t size)
+t_zone *new_zone(t_zone **head, size_t size)
 {
 	t_zone *zone;
 
-	zone = new_zone(size);
+	zone = allocate_zone(size);
 	if (!head || !zone)
 		return NULL;
 	if (!*head)
