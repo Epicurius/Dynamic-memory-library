@@ -12,19 +12,9 @@
  */
 static void	merge_free_adjacent_blocks(t_block *prev, t_block *curr)
 {
-	if (curr->next) {
-		/*
-		 * There might be unused memory between blocks. This happens when
-		 * reserving a free block which is between two reserved blocks, and the
-		 * block size is larger than the required size, but to small for
-		 * splitting into two separate blocks.
-		 */
-		curr->size = (void *)curr->next - ((void *)curr + sizeof(t_block));
-
-		if (curr->next->free == TRUE) {
-			curr->size += sizeof(t_block) + curr->next->size;
-			curr->next = curr->next->next;
-		}
+	if (curr->next && curr->next->free == TRUE) {
+		curr->size += sizeof(t_block) + curr->next->size;
+		curr->next = curr->next->next;
 	}
 	if (prev && prev->free == TRUE) {
 		prev->size += sizeof(t_block) + curr->size;
