@@ -15,9 +15,9 @@ t_alloc	g_alloc =
 
 /*
  * Searches through the zone 'zone' for a block that has minimum 'size' amount
- * of available space. Returns the pointer if found, else returns 'NULL'.
+ * of available space. Returns the block if found, else returns 'NULL'.
  */
-static void	*find_block(t_zone *zone, size_t size)
+static t_block *find_block(t_zone *zone, size_t size)
 {
 	t_block	*block;
 
@@ -26,7 +26,7 @@ static void	*find_block(t_zone *zone, size_t size)
 		if (block->free == TRUE && size <= block->size) {
 			block->free = FALSE;
 			resize_block(block, size);
-			return ((void *)block + sizeof(t_block));
+			return block;
 		}
 		block = block->next;
 	}
@@ -34,16 +34,17 @@ static void	*find_block(t_zone *zone, size_t size)
 }
 
 /*
- * Returns a pointer to user memory after finding and reserving a block.
+ * Iterates through 'type' zones 'zone' searching for an available block.
+ * Returns the block if found, else creates a new zone and block and returns it.
  */
-static void *get_free_block(enum zone_type type, size_t max, size_t size)
+static t_block *get_free_block(enum zone_type type, size_t max, size_t size)
 {
 	t_zone	*zone = g_alloc.zone[type];
-	void	*mem;
+	t_block	*block;
 
 	while (zone) {
-		if ((mem = find_block(zone, size)))
-			return mem;
+		if ((block = find_block(zone, size)))
+			return block;
 		zone = zone->next;
 	}
 
@@ -57,7 +58,7 @@ static void *get_free_block(enum zone_type type, size_t max, size_t size)
 /*
  * Creates a zone with 1 reserved block. This function is 'MEM_LARGE' specific.
  */
-static void *create_large_block(size_t size)
+static t_block *create_large_block(size_t size)
 {
 	t_zone  *zone;
 	size_t  zone_size;
@@ -70,7 +71,7 @@ static void *create_large_block(size_t size)
 
 	block = (void *)zone + sizeof(t_zone);
 	block->free = FALSE;
-	return ((void *)block + sizeof(t_block));
+	return block;
 }
 
 /*
@@ -78,13 +79,18 @@ static void *create_large_block(size_t size)
  */
 void *_malloc(size_t size)
 {
+	t_block *block;
+
 	if (size <= MEM_TINY_MAX)
-		return get_free_block(MEM_TINY, MEM_TINY_MAX, size);
+		block = get_free_block(MEM_TINY, MEM_TINY_MAX, size);
+	else if (size <= MEM_SMALL_MAX)
+		block = get_free_block(MEM_SMALL, MEM_SMALL_MAX, size);
+	else
+		block = create_large_block(size);
 
-	if (size <= MEM_SMALL_MAX)
-		return get_free_block(MEM_SMALL, MEM_SMALL_MAX, size);
-
-	return create_large_block(size);
+	if (!block)
+		return NULL;
+	return (void *)block + sizeof(t_block);
 }
 
 /*
