@@ -9,11 +9,11 @@
 
 /*
  * Returns the total zone size. The zone size is the lowest possible amount of
- * 'PAGE_SIZE' that can fit 'BLOCKS_PER_ZONE' amount of blocks.
+ * 'PAGE_SIZE' that can fit the average block size times 'BLOCKS_PER_ZONE'.
  */
-size_t get_zone_size(size_t size)
+size_t get_zone_size(size_t min, size_t max)
 {
-	size_t block = sizeof(struct block) + size;
+	size_t block = sizeof(struct block) + (int)((min + max)  / 2);
 	size_t zone = sizeof(struct zone) + block * BLOCKS_PER_ZONE;
 	size_t page = PAGE_SIZE;
 	size_t extra = (zone % page);

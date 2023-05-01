@@ -59,7 +59,7 @@ static struct block *get_free_block(enum zone_type type, size_t min, size_t max,
 		zone = zone->next;
 	}
 
-	zone = new_zone(&g_libdm.zone[type], get_zone_size(max));
+	zone = new_zone(&g_libdm.zone[type], get_zone_size(min, max));
 	if (!zone)
 		return NULL;
 

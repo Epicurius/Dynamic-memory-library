@@ -93,7 +93,7 @@ void	_free(void *ptr);
 
 /* Zone related */
 struct zone		*new_zone(struct zone **head, size_t size);
-size_t			get_zone_size(size_t size);
+size_t			get_zone_size(size_t min, size_t max);
 enum zone_type	get_zone_type(size_t size);
 
 /* Block related */
