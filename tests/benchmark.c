@@ -7,11 +7,7 @@
 
 #include <time.h>
 #include <stdio.h>
-#if __has_include("libdm.h")
-# include <libdm.h>
-#else
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 clock_t	g_clock_start;
 

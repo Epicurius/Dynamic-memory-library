@@ -54,7 +54,7 @@ def main():
 
     args = parse_arguments()
 
-    cmd = "gcc ./tests/benchmark.c -L . -Wl,-rpath=$PWD -Wall -ldm_x86_64_Linux -I include -pthread"
+    cmd = "gcc ./tests/benchmark.c -L . -Wl,-rpath=$PWD -Wall -ldm_x86_64_Linux -pthread"
     libdm = run_benchmark(cmd)
 
     cmd = "gcc ./tests/benchmark.c"
