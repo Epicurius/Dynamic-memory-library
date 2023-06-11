@@ -1,108 +1,118 @@
 
-##	My dynamic memory allocation & management library in c.
-
-# NOTE: Currently re-writing the entire library, there were some issues with thread safety.
-
-My Malloc, Realloc and Free can be used in programs already in use without modifying them or recompiling.<br>
+##	My dynamic memory allocation & management library in C.
 
 #### Summary
 
 * [Installation](#installation)
-* [Theory](#theory)
-* [Notable Features](#notable-features)
+* [Explanation](#explanation)
+* [Notes](#notes)
 * [Recreated Functions](#recreated-functions)
 * [Custom Functions](#custom-functions)
 
 <img src="./Images/Visualizer.gif" alt="drawing" width="800"/>
 
-#### Installation
+## Installation
 
 ```sh
-git clone --recurse-submodules https://github.com/Epicurius/Dynamic-memory-library.git libdm
+git clone https://github.com/Epicurius/Dynamic-memory-library.git libdm
 cd libdm
 make
-
-# To run test_main.c
-./test.sh
-
-# For all features:
-# Link like a normal library and run once
-export DYLD_LIBRARY_PATH= < PATH TO libdm >
-
 ```
 ---
 
-#### Theory
-For each allocation the program has to save some info about the allocation, and it does it in a struct called s_block.
+## Explanation
+
+### **Block**
+For each allocation the library saves some metadata in 'struct block'.
 ```c
-typedef struct s_block
+struct block
 {
-	struct s_block	*next;
-	int		free;
-	char		str[4];
-	size_t		size;
-}			t_block;
+	struct block 	 *next;
+	int		 free;
+	char		 str[4];
+	size_t		 size;
+};
 ```
 |Variable				|Explanation												|Bytes	|
 |---					|---														|:---:	|
-|struct s_block *next	|Pointer to the next block, NULL if is the last one.		|	8	|
-|int free				|TRUE or FALSE is the block is not in use.					|4		|
-|char str[4]			|Struct padding, but is utilized by ft_malloc to save hash.	|1 * 4	|
+|struct block *next		|Pointer to the next block, NULL if is the last one.		|	8	|
+|int free				|Bool for whether the block is free or reserved.			|4		|
+|char str[4]			|Utilized by 'ft_malloc()' to save hash.	                |1 * 4	|
 |size_t size			|Size of the memory stored.									|8		|
 
-So every time an allocation is called the total size is __requested size + sizeof(t_block)__.<br>
-Now for example we call __malloc(5) 100 times__.<br>
-For each call the program has to reserve memory space, this is slow and wasteful.<br>
-To solve this the program sorts each allocation call into 3 types (TINY, SMALL, LARGE) depending on requested size.<br>
+So every time an allocation is requested the total occupied memory is __requested size + sizeof(struct block)__.<br>
 
-|Type			|	Min Bytes	|	Max Bytes	|	Zone Size	|
-|:--------------|:-------------:|:-------------:|:-------------:|
-|	TINY		|	0			|		128		|	16384		|
-|	SMALL		|	129			|		1024	|	106496		|
-|	LARGE		|	1025		|		INF		|	Exact amount|
+### **Zone**
 
-For TINY and SMALL the program allocates a predetermined size called Zone.
+Each block is contained in a zone, zones are a large block of memory that act like a buffer from which
+we can distribute smaller chunks of memory on request.
+
+For example, 100 'malloc(5)' calls will request memory 100 times from the operating system, which is very slow.
+Instead we request a larger chunk of memory at once and divvy it up ourselves, 'struct zone' is used to store the
+zones memory's boundaries.
+
 ```c
-typedef struct s_zone
+struct zone
 {
-	struct s_zone	*next;
+	struct zone	*next;
 	void		*end;
-}			t_zone;
+};
 ```
 |Variable				|Explanation												|Bytes	|
 |---					|---														|:---:	|
 |struct s_zone *next	|Pointer to the next zone, NULL if is the last one.			|	8	|
 |void *end				|Pointer to the the end of the zone.						|	8	|
 
-The Zone size is the lowest possible amount of __getpagesize()__ that can fit __((type max + 24) * 100) + sizeof(t_zone)__.
--	TINY : **(128 + 24) * 100 + 16 = 15216** is less than **4096 * 4 = 16384**
--	SMALL : **(1024 + 24) * 100 + 16 = 105616** is less than **4096 * 26 = 106496**
+There are 3 zone types; TINY, SMALL and LARGE.<br>
+TINY/SMALL zone size is the lowest possible amount of __PAGE_SIZE__ that can fit the minimum amount of blocks:<br>
+__(sizeof(struct block) + avg. block size) * BLOCKS_PER_ZONE + sizeof(struct zone)__.
 
-So if malloc(5) is called 100 times, the first call will allocate 16384 Bytes, but use only __5 + sizeof(t_block) + sizeof(t_zone)__.<br>
-And for the next 99 times it does not need to reserve memory space, it can utilize the remaining space left over in Zone.<br>
-Each subsequent malloc call will only use __5 + sizeof(t_block)__.<br>
-When a zone is filled up the next malloc call will create a new zone and repeat the process.<br>
-This makes small allocation a lot faster and more memory efficient.<br>
-While LARGE allocation always need to reserve new memory space, and take up __requested size + sizeof(t_block) + sizeof(t_zone)__.<br>
+LARGE zone is the exception, it will always contain one block and will request memory on demand:<br>
+__requested size + sizeof(struct block) + sizeof(struct zone)__.
+
+### **Allocating**
+
+There are some macros in 'include/libdm.h' that the user can modify:
+|Macro            |Explanation |
+|---	             |---         |
+|**MEM_TINY_MAX**    | maximum size of a TINY block. (min. is 0) |
+|**MEM_SMALL_MAX**   | maximum size of a SMALL block. (min. is MEM_TINY_MAX) |
+|**BLOCKS_PER_ZONE** | minimum amount of average blocks that a zone should contain|
+|**PAGE_SIZE**       | the page size, by default 'getpagesize()' is used to figure it out|
+
+TINY/SMALL example:<br>
+'malloc(5)' is called 100 times, the first call will allocate a TINY zone, but only use __5 + sizeof(struct block) + sizeof(struct zone)__ bytes.<br>
+For the next 99 times it does not need to request memory, because it can utilize the remaining space left in TINY zone.<br>
+And each subsequent 'malloc()' call will only use __5 + sizeof(struct block)__.<br>
+When a zone is filled up the next 'malloc()' call will create a new zone and repeat the process.<br>
+
+LARGE example:<br>
+When 'malloc(100000)' is called, a LARGE zone is allocated __100000 + sizeof(struct block) + sizeof(struct zone)__.
+Any subsequent LARGE allocations will repeat the process.
+
+### **Deallocating**
+
+When a TINY or SMALL block is freed it not erased or freed, instead the block is marked as unused. Additionally if the previous or following block is free the blocks will merged into 1 free block, essentially a type of “Defragmentation”.
+The zone is freed if it has no reserved blocks and there are multiple zones of the same type.
+
+When a LARGE block is freed the entire zone is deallocated, even if there is only 1 LARGE zone.
 
 ---
-#### Notable Features
+## Notes
 
--	When type SMALL or LARGE memory is freed the only thing that happen is the t_block->free is set to TRUE.
-	The memory is not erased it is just marked for re use.
--	The library will try to “Defragment” freed memory. Meaning if the next or previous block is also
-	free it will merge them into 1 free block.
--	Library is “Thread safe”, it should not cause issues if used with pthread.
--	ft_memshow(int fd, int flags) is useful debugging tool. See 'Personal help functions' section for more info.
--	ft_malloc(size_t *size, char *hash) same as standard malloc but takes in a 4 char hash
-	and saves it in t_block->str.
+-	Library is “Thread safe”, it is safe to use is multithreaded projects.
+-	'ft_memshow(int fd, int flags)' is useful debugging tool. See 'Personal help functions' section for more info.
+-	'ft_malloc(size_t *size, char *hash)' same as standard malloc but takes in a 4 char hash
+	and saves it in struct block->str.
 	The 4 bytes where going to waste so I use them with ft_malloc() to mark individual memory blocks.
-	The hash can be viewed with	ft_memshow(1, MEM_SHOW_HASH)
--	ft_memfind(char *hash) returns a pointer to the memory with same hash. Note: Use ft_malloc().
--	ft_mempurge(void) frees all the memory allocated by malloc, realloc, calloc, ft_malloc.
+	The hash can be viewed with	'ft_memshow(1, MEM_SHOW_HASH)'.
+-	'ft_memfind(char *hash)' returns a pointer to the memory with same hash. Note: Use ft_malloc().
+-	'ft_mempurge(void)' frees all the memory allocated by 'malloc()', 'realloc()', 'calloc()', 'ft_malloc()'.
 	Without the developer having to free every individual memory block themselves.
+
 ---
-####	Recreated Functions
+
+## Recreated Functions
 	void	*malloc(size_t size)
 		- Allocates size_t size amount of memory.
 	void	*calloc(size_t num, size_t size)
@@ -112,7 +122,7 @@ While LARGE allocation always need to reserve new memory space, and take up __re
 	void	free(void *ptr)
 		- Frees the memory pointed to by *ptr.
 ---
-####	Custom Functions
+## Custom Functions
 	void	*ft_malloc(size_t size, char *code)
 		- Allocates size_t size amount of memory and saves code for debugging.
 	void	*ft_memfind(char *hash)
@@ -131,7 +141,6 @@ While LARGE allocation always need to reserve new memory space, and take up __re
 		MEM_SHOW_HASH		=	Print all hash. (Use ft_malloc)			
 		-----------------------------------------------------------------------
 
-### Test1
 ```c
 #inlude "libdm.h"
 
@@ -152,7 +161,6 @@ void	main(void)
 ```
 <img src="./Images/Result1.png" alt="drawing" width="900"/>
 
-### Test2
 ```c
 #inlude <stdio.h>
 #inlude <string.h>
